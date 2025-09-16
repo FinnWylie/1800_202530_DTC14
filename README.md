@@ -59,9 +59,9 @@ elmo-hikes/
 
 
 ## Contributors
+- **Finn** - BCIT CST Student with a passion for the outdoors and video editing. Fun fact: Has sailed over 27,000 km offshore.
 - **Rathnesh** - BCIT CST Student who loves games. Fun fact: I play single player games a lot.
-- **Teammate Name** - BCIT CST Student, Frontend enthusiast with a knack for creative design. Fun fact: Has a collection of over 50 houseplants.
-
+- **Kevin Wu** - BCIT CST Student who loves any kind of sports.
 ---
 
 
