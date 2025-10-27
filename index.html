@@ -1,36 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>My BCIT Project</title>
-    <meta name="comp1800 template" content="My 1800 App">
+    <meta name="comp1800 template" content="My 1800 App" />
 
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Other libraries go here -->
 
     <!-- Link to styles of your own -->
-    <!-- <link rel="stylesheet" href="./styles/style.css"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styles/style.css" />
+  </head>
 
-</head>
-
-<body>
-
+  <body class="font-sans leading-7 bg-white">
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
     <!-- Stuff for body goes here -->
+    <header
+      class="bg-no-repeat bg-center bg-cover text-slate-200 py-20 md:py-0"
+      style="
+        background-image: url(https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+      "
+    >
+      <nav style="display: flex; align-items: center; justify-content: center">
+        <ul>
+          <li><a href="#">about us</a></li>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Destination</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <section class="container mx-auto pb-10">
+        <div class="flex flex-col items-center md:items-start">
+          <!--
+tags: [find, magnifier, magnifying glass]
+version: "1.0"
+unicode: "eb1c"
+-->
 
+          <h2
+            id="Website"
+            class="inline-block text-6xl mb-12 tracking-widest font-bold"
+          >
+            Digital
+            <h2 class="inline-block text-6xl mb-12 tracking-widest font-bold">
+              Security
+            </h2>
+            <h2 style="color: #49845b; font-weight: 900">
+              Welcome! We are here to teach you everything about passwords and
+              digital security.
+            </h2>
+          </h2>
+          <div class="inline-block">
+            <a
+              id="test"
+              href="#"
+              class="bg-red-600 opacity-70 p-3 rounded text-lg hover:bg-red-700"
+            >
+              <div id="mre">
+                <div style="margin-left: 1em">Explore now 🕶</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!---------------------------------------------->
+      <!-- Your own JavaScript functions go here    -->
+      <!---------------------------------------------->
 
-    <!---------------------------------------------->
-    <!-- Your own JavaScript functions go here    -->
-    <!---------------------------------------------->
+      <!-- Link to scripts of your own -->
+      <!-- <script type="module" src="./src/main.js"></script> -->
+    </header>
+  </body>
+  <style>
+    #mre {
+      margin-left: 9em;
+      height: 1.6em;
+      background: black;
+      border-radius: 4em;
+      width: 9.6em;
+    }
 
-    <!-- Link to scripts of your own -->
-    <!-- <script type="module" src="./src/main.js"></script> -->
+    #card {
+      width: 37%;
+      height: 43%;
+      background-color: rgb(208, 194, 194);
+    }
 
-</body>
+    #test {
+      width: 20em;
+      display: block;
+      border-radius: 4em;
+    }
 
+    @media only screen and (max-width: 600px) {
+      #meda {
+        align-items: center;
+        justify-content: center;
+      }
+
+      #goated {
+        align-items: center;
+        justify-content: center;
+      }
+
+      #card {
+        width: 90%;
+        height: 43%;
+      }
+
+      #text {
+        margin-left: 1rem !important;
+      }
+    }
+  </style>
 </html>
