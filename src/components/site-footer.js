@@ -5,7 +5,7 @@ class SiteFooter extends HTMLElement {
             <footer class="w-full py-2 px-2 border-t-4 border-black fixed bottom-0 bg-white">
                 <div class="flex justify-center items-center gap-1">
                     <!-- Home -->
-                    <button onclick="location.href='home_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                    <button onclick="location.href='index.html'" class="flex flex-col items-center mx-auto w-[64px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12l-2 0l9 -9l9 9l-2 0"/>
