@@ -2,7 +2,7 @@ class SiteFooter extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <!-- Footer -->
-            <footer class="w-full py-2 px-2 border-y-4 border-black">
+            <footer class="w-full py-2 px-2 border-t-4 border-black fixed bottom-0 bg-white">
                 <div class="flex justify-center items-center gap-1">
                     <!-- Home -->
                     <div class="flex flex-col items-center mx-auto w-[64px]">
