@@ -1,0 +1,124 @@
+/*containers*/
+
+#settings {
+    background-color: lightgrey;
+    padding: 1em;
+    transition: all .5s ease;
+    border-radius: 1em;
+    border: black 2px solid;
+    font-family: "Fira Sans";
+}
+
+#userp {
+    background-color: lightgrey;
+    padding: 1em;
+    transition: all .5s ease;
+    border-radius: 1em;
+    border: black 2px solid;
+    font-family: "Fira Sans";
+}
+
+#notif {
+    background-color: lightgrey;
+    padding: 1em;
+    transition: all .5s ease;
+    border-radius: 1em;
+    border: black 2px solid;
+    font-family: "Fira Sans";
+}
+
+#supp {
+    background-color: lightgrey;
+    padding: 1em;
+    transition: all .5s ease;
+    border-radius: 1em;
+    border: black 2px solid;
+    font-family: "Fira Sans";
+}
+
+#so {
+    background-color: lightgrey;
+    padding: 1em;
+    transition: all .5s ease;
+    border-radius: 1em;
+    border: black 2px solid;
+    font-family: "Fira Sans";
+}
+
+#submenu {
+    background-color: lightgrey;
+    padding: 1em;
+    transition: all .5s ease;
+    font-family: "Fira Sans";
+}
+
+#submenu {
+    padding: 1em;
+    display: none;
+    background-color: lightgray;
+    font-family: "Fira Sans";
+}
+
+#submenus {
+    padding: 1em;
+    display: none;
+    background-color: lightgray;
+    font-family: "Fira Sans";
+}
+
+#clm {
+    padding: 1em;
+    display: none;
+    background-color: lightgray;
+    font-family: "Fira Sans";
+}
+
+/*hover effects*/
+
+#notif.nohover:hover {
+    background-color: grey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#supp:hover {
+    background-color: grey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#userp:hover {
+    background-color: grey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#settings:hover {
+    background-color: grey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#so:hover {
+    background-color: grey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#clm:hover {
+    background-color: darkgrey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#submenu:hover {
+    background-color: darkgrey;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+#submenus:hover {
+    background-color: darkgrey;
+    cursor: pointer;
+    transition: all .5s ease;
+}

@@ -1,4 +1,4 @@
-# Elmo Hikes
+# BRAND
 
 
 ## Overview
@@ -11,10 +11,7 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 
 ## Features
 
-- Browse a list of curated hiking trails with images and details
-- Mark and unmark trails as favorites
-- View a personalized list of favorite hikes
-- Responsive design for desktop and mobile
+- Click between tabs
 
 ---
 
@@ -22,7 +19,7 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 ## Technologies Used
 
 Example:
-- **Frontend**: HTML, CSS, JavaScript
+- **Frontend**: HTML, CSS, JavaScript, Tailwind V4
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Backend**: Firebase for hosting
 - **Database**: Firestore
@@ -33,9 +30,7 @@ Example:
 ## Usage
 
 1. Open your browser and visit `http://localhost:3000`.
-2. Browse the list of hiking trails displayed on the main page.
-3. Click the heart icon (or similar) to mark a trail as a favorite.
-4. View your favorite hikes in the favorites section.
+2. 
 
 ---
 
@@ -43,7 +38,7 @@ Example:
 ## Project Structure
 
 ```
-elmo-hikes/
+1800_202530_DTC14/
 ├── src/
 │   ├── main.js
 ├── styles/
@@ -61,7 +56,7 @@ elmo-hikes/
 ## Contributors
 - **Rathnesh** -  Fun fact: Loves to code, and game
 - **Kevin Wu** - BCIT CST Student who loves any kind of sports.
-- **Finn** - BCIT CST Student with a passion for the outdoors and video editing. Fun fact: Has sailed over 27,000 km offshore.
+- **Finn** - BCIT CST Student with a passion for the outdoors and video editing.
 
 ---
 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="src/styles/settings_style.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet">
+
+        <!-- Web Components for shared navbar and footer layout -->
+        <script type="module" src="/src/components/site-navbar.js"></script>
+        <script type="module" src="/src/components/site-footer.js"></script>
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
+    </head>
+
+    <body style="background-color: white;" class="nohover">
+
+        <site-navbar></site-navbar>
+
+        <div class="p-6">
+            <div id="settings">Settings</div>
+            <br>
+            <div id="userp">User Profile</div>
+            <br>
+
+            <div class="nohover" id="notif">Notifications
+                <div id="padding" style="padding: .5em; display: none;"></div>
+                <div id="submenu">Mute Notifcations</div>
+                <div id="submenus">Manage Notifications</div>
+                <div id="clm">Close Submenu</div>
+            </div>
+            <br>
+            <div id="supp">Support</div>
+            <br>
+            <div id="so">Sign out</div>
+        </div>
+
+        <!-- footer goes here -->
+        <site-footer></site-footer>
+
+        <!---------------------------------------------->
+        <!-- Your own JavaScript scripts go here      -->
+        <!---------------------------------------------->
+
+        <script src="src/settings_script.js"></script>
+        <script type="module" src="/src/app.js"></script>
+</body>
+</html>
