@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>My BCIT Project</title>
+    <meta name="comp1800 template" content="My 1800 App" />
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Web Components for shared navbar and footer layout -->
+    <script type="module" src="/src/components/site-navbar.js"></script>
+    <script type="module" src="/src/components/site-footer.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+
+    <!-- our own navbar goes here -->
+    <site-navbar></site-navbar>
+
+    <!-- Main content goes here -->
+    <!-- Bookmark section -->
+    <div class="pt-12 px-4">
+      <h1
+        class="bg-neutral-300 text-black rounded-xl px-3 py-2 text-2xl font-medium"
+      >
+        Bookmarked
+      </h1>
+      <!-- Bookmark box_one -->
+      <div class="mt-10 mb-6">
+        <div
+          class="bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3"
+        >
+          <div class="bg-white w-36 h-24 flex items-center justify-center">
+            <p>Image</p>
+          </div>
+          <div class="text-left leading-tight">
+            <h1>Country</h1>
+            <h1>City</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Bookmark box_two -->
+      <div class="mb-6">
+        <div
+          class="bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3"
+        >
+          <div class="bg-white w-36 h-24 flex items-center justify-center">
+            <p>Image</p>
+          </div>
+          <div class="text-left leading-tight">
+            <h1>Country</h1>
+            <h1>City</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Bookmark box_three -->
+      <div class="mb-6">
+        <div
+          class="bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3"
+        >
+          <div class="bg-white w-36 h-24 flex items-center justify-center">
+            <p>Image</p>
+          </div>
+          <div class="text-left leading-tight">
+            <h1>Country</h1>
+            <h1>City</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Bookmark box_four -->
+      <div class="mb-6">
+        <div
+          class="bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3"
+        >
+          <div class="bg-white w-36 h-24 flex items-center justify-center">
+            <p>Image</p>
+          </div>
+          <div class="text-left leading-tight">
+            <h1>Country</h1>
+            <h1>City</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Bookmark box_five -->
+      <div class="mb-6">
+        <div
+          class="bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3"
+        >
+          <div class="bg-white w-36 h-24 flex items-center justify-center">
+            <p>Image</p>
+          </div>
+          <div class="text-left leading-tight">
+            <h1>Country</h1>
+            <h1>City</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- our own footer goes here -->
+    <site-footer></site-footer>
+
+    <!---------------------------------------------->
+    <!-- Your own JavaScript scripts go here      -->
+    <!---------------------------------------------->
+
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>
