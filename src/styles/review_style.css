@@ -1,6 +1,25 @@
 /*containers*/
 
-#settings {
+#review {
+    background-color: lightgrey;
+    padding: .5em;
+    transition: all .5s ease;
+    border-radius: 1em;
+    border: black 2px solid;
+    font-family: "Fira Sans";
+    font-size: 1.4em;
+}
+
+#areview {
+    background-color: lightgrey;
+    padding: .7em;
+    transition: all .5s ease;
+    border-radius: 1.6em;
+    width: 10em;
+    font-family: "Fira Sans";
+}
+
+#mreview {
     background-color: lightgrey;
     padding: 1em;
     transition: all .5s ease;
@@ -9,30 +28,12 @@
     font-family: "Fira Sans";
 }
 
-#userp {
+#container {
     background-color: lightgrey;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
-    border: black 2px solid;
-    font-family: "Fira Sans";
-}
-
-#notif {
-    background-color: lightgrey;
-    padding: 1em;
-    transition: all .5s ease;
-    border-radius: 1em;
-    border: black 2px solid;
-    font-family: "Fira Sans";
-}
-
-#supp {
-    background-color: lightgrey;
-    padding: 1em;
-    transition: all .5s ease;
-    border-radius: 1em;
-    border: black 2px solid;
+    height: 30em;
     font-family: "Fira Sans";
 }
 
@@ -96,7 +97,7 @@
     transition: all .5s ease;
 }
 
-#settings:hover {
+#review:hover {
     background-color: grey;
     cursor: pointer;
     transition: all .5s ease;
