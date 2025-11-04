@@ -97,7 +97,7 @@
     transition: all .5s ease;
 }
 
-#review:hover {
+#areview:hover {
     background-color: grey;
     cursor: pointer;
     transition: all .5s ease;
