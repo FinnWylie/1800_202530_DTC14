@@ -6,14 +6,12 @@
 // Manages the login/signup form behaviour and redirects.
 // -------------------------------------------------------------
 
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'bootstrap';
 import './styles/style.css';
-// import {
-//     loginUser,
-//     signupUser,
-//     authErrorMessage,
-// } from './authentication.js';
+import {
+    loginUser,
+    signupUser,
+    authErrorMessage,
+} from './authentication.js';
 
 
 // --- Login and Signup Page ---
@@ -23,6 +21,7 @@ import './styles/style.css';
 
 function initAuthUI() {
     console.log("initAuthUI running!");
+
     // --- DOM Elements ---
     const alertEl = document.getElementById('authAlert');
     const loginView = document.getElementById('loginView');
@@ -37,12 +36,16 @@ function initAuthUI() {
     // --- Helper Functions ---
     // Toggle element visibility
     function setVisible(el, visible) {
-        el.classList.toggle('hidden', !visible);
+        if (el) {
+            el.classList.toggle('hidden', !visible);
+        }
     }
 
     // Show error message with accessibility and auto-hide
     let errorTimeout;
     function showError(msg) {
+        if (!alertEl) return;
+
         alertEl.textContent = msg || '';
         alertEl.classList.remove('hidden');
         clearTimeout(errorTimeout);
@@ -51,6 +54,8 @@ function initAuthUI() {
 
     // Hide error message
     function hideError() {
+        if (!alertEl) return;
+
         alertEl.classList.add('hidden');
         alertEl.textContent = '';
         clearTimeout(errorTimeout);
@@ -59,7 +64,14 @@ function initAuthUI() {
     // Enable/disable submit button for forms
     function setSubmitDisabled(form, disabled) {
         const submitBtn = form?.querySelector('[type="submit"]');
-        if (submitBtn) submitBtn.disabled = disabled;
+        if (submitBtn) {
+            submitBtn.disabled = disabled;
+            if (disabled) {
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
     }
 
     // --- Event Listeners ---
@@ -69,14 +81,25 @@ function initAuthUI() {
         hideError();
         setVisible(loginView, false);
         setVisible(signupView, true);
+
+        // Clear login form
+        if (loginForm) loginForm.reset();
+
+        // Focus first input in signup
         signupView?.querySelector('input')?.focus();
     });
 
+    // Toggle to login view
     toLoginBtn?.addEventListener('click', (e) => {
         e.preventDefault();
         hideError();
         setVisible(signupView, false);
         setVisible(loginView, true);
+
+        // Clear signup form
+        if (signupForm) signupForm.reset();
+
+        // Focus first input in login
         loginView?.querySelector('input')?.focus();
     });
 
@@ -84,19 +107,23 @@ function initAuthUI() {
     loginForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideError();
+
         const email = document.querySelector('#loginEmail')?.value?.trim() ?? '';
         const password = document.querySelector('#loginPassword')?.value ?? '';
+
         if (!email || !password) {
             showError('Please enter your email and password.');
             return;
         }
+
         setSubmitDisabled(loginForm, true);
+
         try {
             await loginUser(email, password);
-            location.href = redirectUrl;
+            window.location.href = redirectUrl;
         } catch (err) {
             showError(authErrorMessage(err));
-            console.error(err);
+            console.error('Login error:', err);
         } finally {
             setSubmitDisabled(loginForm, false);
         }
@@ -106,20 +133,29 @@ function initAuthUI() {
     signupForm?.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideError();
+
         const name = document.querySelector('#signupName')?.value?.trim() ?? '';
         const email = document.querySelector('#signupEmail')?.value?.trim() ?? '';
         const password = document.querySelector('#signupPassword')?.value ?? '';
+
         if (!name || !email || !password) {
             showError('Please fill in name, email, and password.');
             return;
         }
+
+        if (password.length < 6) {
+            showError('Password must be at least 6 characters long.');
+            return;
+        }
+
         setSubmitDisabled(signupForm, true);
+
         try {
             await signupUser(name, email, password);
-            location.href = redirectUrl;
+            window.location.href = redirectUrl;
         } catch (err) {
             showError(authErrorMessage(err));
-            console.error(err);
+            console.error('Signup error:', err);
         } finally {
             setSubmitDisabled(signupForm, false);
         }
