@@ -2,10 +2,10 @@ class SiteFooter extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
             <!-- Footer -->
-            <footer class="w-full py-2 px-2 border-t-4 border-black fixed bottom-0 bg-white">
+            <footer style="border-color: #679376ff" class="w-full py-2 px-2 border-t-4 fixed bottom-0 bg-white">
                 <div class="flex justify-center items-center gap-1">
                     <!-- Home -->
-                    <button onclick="location.href='home_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                    <button data-page="home_index.html" id="test" onclick="location.href='home_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12l-2 0l9 -9l9 9l-2 0"/>
@@ -16,7 +16,7 @@ class SiteFooter extends HTMLElement {
                     </button>
         
                     <!-- Search -->
-                    <button onclick="location.href='search_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                    <button id="test" onclick="location.href='search_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
@@ -26,7 +26,7 @@ class SiteFooter extends HTMLElement {
                     </button>
         
                     <!-- Reviews -->
-                    <button onclick="location.href='review_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                    <button id="test" onclick="location.href='review_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/>
@@ -35,7 +35,7 @@ class SiteFooter extends HTMLElement {
                     </button>
         
                     <!-- Saved -->
-                    <button onclick="location.href='saved_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                    <button  id="test" onclick="location.href='saved_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4z"/>
@@ -45,7 +45,7 @@ class SiteFooter extends HTMLElement {
         
                     <!-- Profile -->
                     <button id="test" onclick="location.href='settings_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                        <svg id="testing" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
                             <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
@@ -60,10 +60,11 @@ class SiteFooter extends HTMLElement {
                     transition: all .6s ease;
                 }
                 svg {
+                    stroke: #3a4f41ff;
                     transition: all .6s ease;
                 } 
                 svg:hover{
-                    stroke: #5D866C;
+                    stroke: #61b07eff;
                     transition: all .6s ease;
                 }
             </style>

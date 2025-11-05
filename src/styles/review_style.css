@@ -1,17 +1,17 @@
 /*containers*/
 
 #review {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: .5em;
     transition: all .5s ease;
     border-radius: 1em;
     border: black 2px solid;
     font-family: "Fira Sans";
-    font-size: 1.4em;
+    font-size: 1.4rem;
 }
 
 #areview {
-    background-color: lightgrey;
+    background-color: #d4c0ad;
     padding: .7em;
     transition: all .5s ease;
     border-radius: 1.6em;
@@ -21,7 +21,7 @@
 
 
 #mreview {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -30,7 +30,7 @@
 }
 
 #container {
-    background-color: lightgrey;
+    background-color: #d4c0ad;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -38,92 +38,8 @@
     font-family: "Fira Sans";
 }
 
-#so {
-    background-color: lightgrey;
-    padding: 1em;
-    transition: all .5s ease;
-    border-radius: 1em;
-    border: black 2px solid;
-    font-family: "Fira Sans";
-}
-
-#submenu {
-    background-color: lightgrey;
-    padding: 1em;
-    transition: all .5s ease;
-    font-family: "Fira Sans";
-}
-
-#submenu {
-    padding: 1em;
-    display: none;
-    background-color: lightgray;
-    transition: all .5s ease;
-    font-family: "Fira Sans";
-}
-
-#submenus {
-    padding: 1em;
-    display: none;
-    background-color: lightgray;
-    font-family: "Fira Sans";
-    transition: all .5s ease;
-}
-
-#clm {
-    padding: 1em;
-    display: none;
-    background-color: lightgray;
-    font-family: "Fira Sans";
-    transition: all .5s ease;
-}
-
-/*hover effects*/
-
-#notif.nohover:hover {
-    background-color: grey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
-#supp:hover {
-    background-color: grey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
-#userp:hover {
-    background-color: grey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
 #areview:hover {
-    background-color: grey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
-#so:hover {
-    background-color: grey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
-#clm:hover {
-    background-color: darkgrey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
-#submenu:hover {
-    background-color: darkgrey;
-    cursor: pointer;
-    transition: all .5s ease;
-}
-
-#submenus:hover {
-    background-color: darkgrey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }

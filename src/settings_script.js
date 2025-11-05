@@ -4,6 +4,7 @@ const submenus = document.getElementById('submenus');
 const clm = document.getElementById('clm');
 const padding = document.getElementById('padding');
 const signo = document.getElementById('so');
+const sup = document.getElementById('supp');
 
 // import {
 //     onAuthStateChanged,
@@ -36,4 +37,7 @@ clm.addEventListener('click', (e) => {
     notif.style.backgroundColor = "#e6d8c3";
     console.log("Closed");
 });
+sup.addEventListener('click', () => {
+
+})
 // signo?.addEventListener('click', logoutUser);
