@@ -1,10 +1,14 @@
 @import "../../node_modules/tailwindcss/dist/lib.d.mts";
 
 @theme {
-    --font-zalando: "Zalando Sans", sans-serif;
+  --font-zalando: "Zalando Sans", sans-serif;
 }
 
-
+#set:hover {
+  background-color: #c2a68c;
+  cursor: none;
+  transition: all .5s ease;
+}
 
 ul {
   list-style-type: none;

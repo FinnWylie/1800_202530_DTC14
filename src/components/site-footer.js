@@ -44,7 +44,7 @@ class SiteFooter extends HTMLElement {
                     </button>
         
                     <!-- Profile -->
-                    <button onclick="location.href='settings_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                    <button id="test" onclick="location.href='settings_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
                              fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
@@ -55,8 +55,19 @@ class SiteFooter extends HTMLElement {
                     </button>
                 </div>
             </footer>
+            <style>
+                button {
+                    transition: all .6s ease;
+                }
+                svg {
+                    transition: all .6s ease;
+                } 
+                svg:hover{
+                    stroke: #5D866C;
+                    transition: all .6s ease;
+                }
+            </style>
         `;
     }
 }
-
 customElements.define('site-footer', SiteFooter);

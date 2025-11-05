@@ -1,7 +1,7 @@
 /*containers*/
 
 #settings {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -10,7 +10,7 @@
 }
 
 #userp {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -19,7 +19,7 @@
 }
 
 #notif {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -28,7 +28,7 @@
 }
 
 #supp {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -36,8 +36,9 @@
     font-family: "Fira Sans";
 }
 
+
 #so {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -46,7 +47,7 @@
 }
 
 #submenu {
-    background-color: lightgrey;
+    background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
     font-family: "Fira Sans";
@@ -55,7 +56,7 @@
 #submenu {
     padding: 1em;
     display: none;
-    background-color: lightgray;
+    background-color: #e6d8c3;
     transition: all .5s ease;
     font-family: "Fira Sans";
 }
@@ -63,7 +64,7 @@
 #submenus {
     padding: 1em;
     display: none;
-    background-color: lightgray;
+    background-color: #e6d8c3;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -71,7 +72,7 @@
 #clm {
     padding: 1em;
     display: none;
-    background-color: lightgray;
+    background-color: #e6d8c3;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -79,49 +80,51 @@
 /*hover effects*/
 
 #notif.nohover:hover {
-    background-color: grey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #supp:hover {
-    background-color: grey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
+
+
 #userp:hover {
-    background-color: grey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #settings:hover {
-    background-color: grey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #so:hover {
-    background-color: grey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #clm:hover {
-    background-color: darkgrey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #submenu:hover {
-    background-color: darkgrey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #submenus:hover {
-    background-color: darkgrey;
+    background-color: #c2a68c;
     cursor: pointer;
     transition: all .5s ease;
 }

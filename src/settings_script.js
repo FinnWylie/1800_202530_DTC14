@@ -3,8 +3,16 @@ const submenu = document.getElementById('submenu');
 const submenus = document.getElementById('submenus');
 const clm = document.getElementById('clm');
 const padding = document.getElementById('padding');
+const signo = document.getElementById('so');
 
+// import {
+//     onAuthStateChanged,
+// } from "firebase/auth";
+
+// import { auth } from '/src/firebaseConfig.js';
+// import { logoutUser } from '/src/authentication.js';
 //submenu for notification container
+
 notif.addEventListener('click', () => {
 
     submenu.style.display = "block";
@@ -13,7 +21,6 @@ notif.addEventListener('click', () => {
     notif.classList.remove('nohover');
     notif.style.backgroundColor = "white";
     padding.style.display = "block";
-    //firstChild.textContent doesn't delete the submenu div, thats why Im using it here
     notif.firstChild.textContent = "Notification Settings:  ";
 
 });
@@ -26,6 +33,7 @@ clm.addEventListener('click', (e) => {
     clm.style.display = "none";
     padding.style.display = "none";
     notif.firstChild.textContent = "Notifications";
-    notif.style.backgroundColor = "lightgray";
+    notif.style.backgroundColor = "#e6d8c3";
     console.log("Closed");
 });
+// signo?.addEventListener('click', logoutUser);
