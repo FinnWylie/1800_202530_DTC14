@@ -6,7 +6,7 @@
 // Manages the login/signup form behaviour and redirects.
 // -------------------------------------------------------------
 
-import './styles/style.css';
+// import './styles/style.css';
 import {
     loginUser,
     signupUser,
