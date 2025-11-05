@@ -1,4 +1,4 @@
-// src/firebaseAPIConfig.js
+// src/firebaseConfig.js
 // -------------------------------------------------------------
 // Part of the COMP1800 Project 1 Course (BCIT).
 // Starter code provided for students to use and adapt.
@@ -9,25 +9,23 @@
 // ---------------------------------------------------------
 
 // Import Firebase SDK modules (using Firebase v9 modular syntax)
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 // ---------------------------------------------------------
-// Read Firebase configuration from Vite environment variables.
-// These are defined in your .env file as:
-//
-// VITE_FIREBASE_API_KEY=your-api-key
-// VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-// VITE_FIREBASE_PROJECT_ID=your-project-id
-// VITE_FIREBASE_APP_ID=your-app-id
-//
-// ⚠️ Note: Vite only exposes environment variables that start with "VITE_"
-// ---------------------------------------------------------
+// Import Firebase keys from separate config file
+import { apiKeys } from './apiKeys.js';
+
+// Use the imported keys
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    apiKey: apiKeys.apiKey,
+    authDomain: apiKeys.authDomain,
+    projectId: apiKeys.projectId,
+    appId: apiKeys.appId,
+
+    wikiAccessToken: apiKeys.wikiAccessToken,
+    wikiUserAgent: apiKeys.wikiUserAgent
 };
 
 // ---------------------------------------------------------

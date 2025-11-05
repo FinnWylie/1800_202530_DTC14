@@ -15,6 +15,7 @@
 
 
         <script src="https://cdn.tailwindcss.com"></script>
+        <link href="styles.css" rel="stylesheet">  <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -35,10 +36,10 @@
         <!-- Main content goes here -->
         <main class="px-6">
 
-            <!-- Search section -->
+            <!-- Title section -->
             <div id="searchBar" class="my-6 flex flex-col">
                 <div class="flex flex-row border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
-                    <button id="btnFilter" class="">
+                    <button id="btnBack" class="">
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="48"
@@ -50,68 +51,24 @@
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                         >
-                            <path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
-                        </svg>
-
-                    </button>
-
-                    <label for="searchText"></label>
-                    <input type="text" id="searchText" class="flex-1 bg-[#F5F5F0] text-lg p-2 max-w-full" placeholder="Enter a place" required/>
-                    <button id="btnSearch" class="">
-                        <svg class=""
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="48"
-                                height="48"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="#3C3E7C"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                        >
-                            <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                            <path d="M21 21l-6 -6" />
+                            <path d="M15 6l-6 6l6 6" />
                         </svg>
                     </button>
+
+                    <!-- Place name filled in by JS-->
+                    <place-name class="flex-1 bg-[#F5F5F0] p-2 max-w-full my-auto text-xl"></place-name>
                 </div>
 
             </div>
 
-            <!-- History section -->
+            <!-- Content section -->
             <div>
-                <h1>Recently Viewed</h1>
-                <div id="history" class="flex flex-col border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
-                    <history-place></history-place>
-<!--                    <a class="placeBtn">-->
-<!--                        <div class="historyPlace flex flex-row border-b border-gray-400">-->
-<!--                            <div class="historyPlaceIcon">-->
-<!--                                <svg-->
-<!--                                        xmlns="http://www.w3.org/2000/svg"-->
-<!--                                        width="48"-->
-<!--                                        height="48"-->
-<!--                                        viewBox="0 0 24 24"-->
-<!--                                        fill="none"-->
-<!--                                        stroke="#3C3E7C"-->
-<!--                                        stroke-width="2"-->
-<!--                                        stroke-linecap="round"-->
-<!--                                        stroke-linejoin="round"-->
-<!--                                >-->
-<!--                                    <path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15"/>-->
-<!--                                    <path d="M16 8h2c1 0 2 1 2 2v11"/>-->
-<!--                                    <path d="M3 21h18"/>-->
-<!--                                    <path d="M10 12v0"/>-->
-<!--                                    <path d="M10 16v0"/>-->
-<!--                                    <path d="M10 8v0"/>-->
-<!--                                    <path d="M7 12v0"/>-->
-<!--                                    <path d="M7 16v0"/>-->
-<!--                                    <path d="M7 8v0"/>-->
-<!--                                    <path d="M17 12v0"/>-->
-<!--                                    <path d="M17 16v0"/>-->
-<!--                                </svg>-->
-<!--                            </div>-->
-<!--                            <p class="historyPlaceName my-auto pl-2 text-xl">Vancouver, Canada</p>-->
-<!--                        </div>-->
-<!--                    </a>-->
+                <div class="placeImage">
+                    <img src="#" alt="">
+                </div>
+
+                <div id="placeText" class="flex flex-col border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
+
                 </div>
             </div>
         </main>

@@ -7,19 +7,20 @@
 // -------------------------------------------------------------
 
 // Import the initialized Firebase Authentication object
-import { auth } from "/src/firebaseConfig.js";
+import { auth } from "./firebaseConfig.js";
+import { db } from "./firebaseConfig.js";
 
 // Import specific functions from the Firebase Auth SDK
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
 
-import { db } from "/src/firebaseConfig.js";
-import { doc, setDoc } from "firebase/firestore";
+import {
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged,
+    signOut,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // -------------------------------------------------------------
 // loginUser(email, password)

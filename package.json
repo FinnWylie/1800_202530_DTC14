@@ -1,5 +1,5 @@
 {
-  "name": "web_template_with_bootstrap",
+  "name": "web_template_with_tailwind",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@popperjs/core": "^2.11.8",
     "firebase": "^12.5.0"
   },
   "devDependencies": {

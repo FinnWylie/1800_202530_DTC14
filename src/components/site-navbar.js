@@ -64,7 +64,7 @@ class SiteNavbar extends HTMLElement {
                 const signOutBtn = authControls.querySelector('#signOutBtn');
                 signOutBtn?.addEventListener('click', logoutUser);
             } else {
-                updatedAuthControl = `<a class="btn btn-outline-light" id="loginBtn" href="/login.html" style="min-width: 80px;">Log in</a>`;
+                updatedAuthControl = `<a class="btn btn-outline-light" id="loginBtn" href="/loginSignup.html" style="min-width: 80px;">Log in</a>`;
                 authControls.innerHTML = updatedAuthControl;
             }
         });
