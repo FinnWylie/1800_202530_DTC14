@@ -4,7 +4,7 @@
     background-color: #e6d8c3;
     padding: .5em;
     transition: all .5s ease;
-    border-radius: 1em;
+    border-radius: .75rem;
     border: black 2px solid;
     font-family: "Fira Sans";
     font-size: 1.4rem;
@@ -24,7 +24,7 @@
     background-color: #e6d8c3;
     padding: 1em;
     transition: all .5s ease;
-    border-radius: 1em;
+    border-radius: .75rem;
     border: black 2px solid;
     font-family: "Fira Sans";
 }

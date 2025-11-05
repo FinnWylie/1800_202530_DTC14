@@ -29,9 +29,17 @@
     <div class="p-4">
         <div id="settings">Settings</div>
         <br>
-        <div id="userp">User Profile</div>
-        <br>
+        <div id="userp">
+            <span style="margin-left: 1.7em;">User Profile</span>
+        </div>
+        <svg id="svgi" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+            <path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" />
+        </svg>
 
+        <br>
         <div class="nohover" id="notif">Notifications
             <div id="padding" style="padding: .5em; display: none;"></div>
             <div id="submenu">Mute Notifcations</div>
@@ -48,6 +56,15 @@
 
     <script src="src/settings_script.js"></script>
     <script type="module" src="/src/app.js"></script>
+    <style>
+        #svgi {
+            stroke: #3a4f41ff;
+            transition: all .6s ease;
+            margin-top: -2.9em;
+            scale: 1;
+            margin-left: 0.5em;
+        }
+    </style>
 </body>
 
 </html>
