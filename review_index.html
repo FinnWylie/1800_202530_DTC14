@@ -31,15 +31,17 @@
     <div id="review">
       <span>Reviews</span>
     </div>
-
-    <div style="margin-top: 3em;" id="areview">
-      <span style="margin-left: 1.7em;">Add Review</span>
+    <div style="display: inline-flex; gap: 4; align-items: center;" id="reviewr">
+      <button style="margin-top: 3em;" id="areview">
+        <span>Add Review</span>
+      </button>
+      <svg id="svging" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5l0 14" />
+        <path d="M5 12l14 0" />
+      </svg>
     </div>
-    <svg id="svging" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-      stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 5l0 14" />
-      <path d="M5 12l14 0" />
-    </svg>
+
     <div style="margin-top: 1em;" id="mreview">
       <span>My Reviews</span>
     </div>
@@ -91,9 +93,23 @@
     #svging {
       stroke: #3a4f41ff;
       transition: all .6s ease;
-      margin-top: -2.5em;
+      margin-top: 2.9em;
       scale: .7;
-      margin-left: .3em;
+      margin-left: -9.6em;
+
+    }
+
+    #reviewr {
+      stroke-opacity: 0;
+    }
+
+    #reviewr:hover #svging {
+      transform: rotate(360deg);
+      cursor: pointer;
+      transition: all 1s ease;
+      stroke: #5D866C;
+      stroke-opacity: 1;
+      stroke-width: .1em;
     }
   </style>
 </body>
