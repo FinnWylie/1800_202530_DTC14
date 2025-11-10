@@ -13,7 +13,8 @@
     <script type="module" src="/src/components/site-footer.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-      <link href="styles.css" rel="stylesheet">  <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
+    <link href="styles.css" rel="stylesheet" />
+    <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +42,10 @@
         Places You Might Like
       </h1>
       <!-- Country with city boxes -->
-      <div class="flex gap-6 justify-start overflow-hidden mt-7 pl-3">
+      <div
+        class="flex gap-6 justify-start overflow-x-auto mt-7 pl-3"
+        id="places-container"
+      >
         <!-- First country -->
         <div
           class="bg-neutral-300 rounded-2xl font-medium w-44 h-36 py-4 px-5 content-end shrink-0"
@@ -67,7 +71,10 @@
         Restaurants to try
       </h1>
       <!-- Restaurant boxes -->
-      <div class="flex gap-6 justify-start overflow-hidden mt-7 pl-3">
+      <div
+        class="flex gap-6 justify-start overflow-x-auto mt-7 pl-3"
+        id="restaurants-container"
+      >
         <!-- First restaurant box -->
         <div
           class="bg-neutral-300 rounded-2xl font-medium w-44 h-36 py-4 px-5 content-end shrink-0"
@@ -94,7 +101,10 @@
       >
         Popular Places
       </h1>
-      <div class="flex gap-6 justify-start overflow-hidden mt-7 pl-3">
+      <div
+        class="flex gap-6 justify-start overflow-x-auto mt-7 pl-3"
+        id="popular-container"
+      >
         <!-- First place box -->
         <div
           class="bg-neutral-300 rounded-2xl font-medium w-44 h-36 py-4 px-5 content-end shrink-0"
@@ -118,6 +128,7 @@
     <!---------------------------------------------->
     <!-- Your own JavaScript scripts go here      -->
     <!---------------------------------------------->
+    <script type="module" src="/src/homescript.js"></script>
 
     <script type="module" src="/src/app.js"></script>
   </body>
