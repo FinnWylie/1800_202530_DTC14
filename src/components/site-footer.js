@@ -56,6 +56,9 @@ class SiteFooter extends HTMLElement {
                 </div>
             </footer>
             <style>
+                 body {
+                    padding-bottom: 100px !important;
+                }
                 button {
                     transition: all .6s ease;
                 }
