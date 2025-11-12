@@ -37,9 +37,9 @@
         <main class="px-6">
 
             <!-- Title section -->
-            <div id="searchBar" class="my-6 flex flex-col">
-                <div class="flex flex-row border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
-                    <button id="btnBack" class="">
+            <div id="titleBar" class="my-6 flex flex-col">
+                <div class="flex flex-row border-2 border-[#c2a68c] rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
+                    <button onclick="history.back()" id="btnBack" class="">
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="48"
@@ -56,19 +56,29 @@
                     </button>
 
                     <!-- Place name filled in by JS-->
-                    <place-name class="flex-1 bg-[#F5F5F0] p-2 max-w-full my-auto text-xl"></place-name>
+                    <h1 id="title" class="text-3xl font-bold content-center my-auto text-[#37433b]"></h1>
                 </div>
 
             </div>
 
             <!-- Content section -->
             <div>
-                <div class="placeImage">
-                    <img src="#" alt="">
-                </div>
+                <div id="placeText" class="flex flex-col border-2 border-[#c2a68c] rounded-xl bg-[#F5F5F0] text-lg max-h-min ">
+                    <div id="error" class="hidden">
+                        <p class="text-red-600 bg-red-50 p-4 rounded-xl"></p>
+                    </div>
+                    <div id="loading" class="text-center py-8">
+                        <p class="text-gray-600">Loading...</p>
+                    </div>
 
-                <div id="placeText" class="flex flex-col border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
-
+                    <div id="content" class="hidden p-2">
+                        <img id="image" class="w-full rounded-xl mb-2" alt="" />
+                        <div class="">
+                            <p id="paragraph" class="text-lg leading-relaxed mb-4"></p>
+                            <a id="link" href="" target="_blank" class="text-[#5d866c] hover:underline font-bold">Read more on
+                                Wikipedia →</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -81,5 +91,6 @@
         <!---------------------------------------------->
 
         <script type="module" src="/src/app.js"></script>
+        <script type="module" src="/src/eachPlace.js"></script>
     </body>
 </html>
