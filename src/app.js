@@ -8,20 +8,13 @@ import '/src/styles/style.css';
 import {
   onAuthReady
 } from "/src/authentication.js"
-import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig.js";
-
-//--------------------------------------------------------------
-// Custom global JS code (shared with all pages)can go here.
-//--------------------------------------------------------------
-
+console.log(db)
+import { getDoc, doc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 // This is an example function. Replace it with your own logic.
-function sayHello() {
-  // TODO: implement your logic here
-}
 function showDashboard() {
 
-
+  const submenu = document.getElementById('submenu');
   onAuthReady(async (user) => {
     if (!user) {
       // If no user is signed in → redirect back to login page.
@@ -36,9 +29,9 @@ function showDashboard() {
       : user.displayName || user.email;
 
     // Update the welcome message with their name/email.
-    if (e4) {
-      e4.innerHTML = `${name}!`;
-      console.log("Dashboard shown")
+    if (submenu) {
+      submenu.textContent = `Username: ${name}!`;
+      console.log(`Welcome, ${name}!`);
     }
   });
 }
