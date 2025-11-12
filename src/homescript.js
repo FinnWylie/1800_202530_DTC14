@@ -20,7 +20,7 @@ const restaurants = [
   "Burger Boss",
 ];
 
-const ratings = [3, 4, 4.5, 5];
+const ratings = [3, 4, 5];
 
 function getRandomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
