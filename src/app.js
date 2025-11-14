@@ -3,7 +3,6 @@ import {
   onAuthReady
 } from "/src/authentication.js"
 import { db } from "./firebaseConfig.js";
-console.log(db)
 import { getDoc, doc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { logoutUser } from '/src/authentication.js';
 import {
