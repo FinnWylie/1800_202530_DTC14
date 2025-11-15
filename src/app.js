@@ -17,15 +17,18 @@ function showDashboard() {
   const submenu = document.getElementById('submenu');
   const sub = document.getElementById('sub');
   const submenus = document.getElementById('submenus');
+
   onAuthReady(async (user) => {
     if (!user) {
-      // If no user is signed in → redirect back to login page.
-      // location.href = "index.html";
-      console.log("No user logged in");
+
+      setTimeout(function () {
+        alert("no user logged in, redirecting to home page");
+        location.href = "index.html";
+      }, 1500)
       submenu.textContent = `No user logged in`;
       return;
-    }
 
+    }
     const userDoc = await getDoc(doc(db, "users", user.uid));
     const name = userDoc.exists()
       ? userDoc.data().name
