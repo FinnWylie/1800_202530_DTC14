@@ -1,8 +1,8 @@
-# BRAND
+# Trip 'n Dip
 
 
 ## Overview
-Elmo Hikes is a client-side JavaScript web application that helps users discover and explore hiking trails. The app displays a curated list of hike trails, each with details such as name, location, difficulty, and an image. Users can browse the list and mark their favorite trails for easy access later.
+Trip 'n Dip is a client-side JavaScript web application that helps users discover and explore places to visit. The app displays a curated list of sight-seeing areas, each with details such as name, location, and an image. Users can browse the list and mark places for easy access later.
 
 Developed for the COMP 1800 course, this project applies User-Centred Design practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.
 

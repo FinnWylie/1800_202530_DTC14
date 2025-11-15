@@ -3,13 +3,15 @@ import {
   onAuthReady
 } from "/src/authentication.js"
 import { db } from "./firebaseConfig.js";
-import { getDoc, doc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { logoutUser } from '/src/authentication.js';
-import {
-  onAuthStateChanged,
-} from "firebase/auth";
 
-import { auth } from '/src/firebaseConfig.js';
+// import {
+//   onAuthStateChanged,
+// } from "firebase/auth";
+
+// import { auth } from '/src/firebaseConfig.js';
+
 function showDashboard() {
 
   const submenu = document.getElementById('submenu');
@@ -38,7 +40,6 @@ function showDashboard() {
       submenu.textContent = `Username: ${name}!`;
       sub.textContent = "Email: " + user.email
       submenus.textContent = "Country: " + userDoc.data().country
-      console.log(`Welcome, ${name}!`);
     }
 
   });
