@@ -10,7 +10,7 @@ import { logoutUser } from '/src/authentication.js';
 // } from "firebase/auth";
 
 // import { auth } from '/src/firebaseConfig.js';
-let something = false
+let something = false // variable will be used later
 function showDashboard() {
 
   const submenu = document.getElementById('submenu');
@@ -23,10 +23,11 @@ function showDashboard() {
 
       submenu.textContent = `No user logged in`;
       but.innerHTML = "Sign in / Sign up"
-      something = true
+      something = true // variable will be used later
       signOutBtn?.addEventListener('click', () => {
         window.location.href = 'loginSignup.html';
       });
+
     }
     const userDoc = await getDoc(doc(db, "users", user.uid));
     const name = userDoc.exists()
