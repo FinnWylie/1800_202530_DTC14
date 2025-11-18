@@ -15,17 +15,19 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase
 
 // ---------------------------------------------------------
 // Import Firebase keys from separate config file
-import { apiKeys } from './apiKeys.js';
+import { apiKeys } from "./apiKeys.js";
 
 // Use the imported keys
 const firebaseConfig = {
-    apiKey: apiKeys.apiKey,
-    authDomain: apiKeys.authDomain,
-    projectId: apiKeys.projectId,
-    appId: apiKeys.appId,
+  apiKey: apiKeys.apiKey,
+  authDomain: apiKeys.authDomain,
+  projectId: apiKeys.projectId,
+  storageBucket: apiKeys.storageBucket,
+  messagingSenderId: apiKeys.messagingSenderId,
+  appId: apiKeys.appId,
 
-    wikiAccessToken: apiKeys.wikiAccessToken,
-    wikiUserAgent: apiKeys.wikiUserAgent
+  wikiAccessToken: apiKeys.wikiAccessToken,
+  wikiUserAgent: apiKeys.wikiUserAgent,
 };
 
 // ---------------------------------------------------------
