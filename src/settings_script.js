@@ -60,7 +60,7 @@ notif.addEventListener('click', () => {
 });
 
 clm.addEventListener('click', (e) => {
-    e.stopPropagation(); // prevent notif's click from firing
+    e.stopPropagation();
     submenu.style.display = "none";
     submenus.style.display = "none";
     notif.classList.add('nohover');
@@ -70,4 +70,3 @@ clm.addEventListener('click', (e) => {
     padding.style.display = "none";
     notif.style.backgroundColor = "#e6d8c3";;
 });
-//--------------------------------------------------------------
