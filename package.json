@@ -11,7 +11,7 @@
     "firebase": "^12.5.0"
   },
   "devDependencies": {
-    "tailwindcss": "3.4",
+    "tailwindcss": "^4.1.17",
     "vite": "^7.1.9"
   }
 }
