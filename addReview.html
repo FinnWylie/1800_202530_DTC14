@@ -8,16 +8,15 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="src/styles/review_style.css">
 
     <!-- Web Components for shared navbar and footer layout -->
     <script type="module" src="/src/components/site-navbar.js"></script>
     <script type="module" src="/src/components/site-footer.js"></script>
 
-    <!-- Tailwind imports -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="styles.css" rel="stylesheet"> <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
 
-    <!-- Google Font imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -25,25 +24,44 @@
         rel="stylesheet">
 </head>
 
-<body>
-    <!------------------------------>
-    <!-- Your HTML Layout go here -->
-    <!------------------------------>
+<body style="background-color: #f5f5f0;">
 
-    <!-- our own navbar goes here -->
     <site-navbar></site-navbar>
+    <div class="p-4">
+        <div id="review">
+            <span>Write your review</span>
+        </div>
+        <br>
+        <br>
+        <div style="margin-top: 1em;" id="mreview">
+            <span>Placeholder text</span>
+        </div>
+        <br>
+        <input id="inp" type="text" placeholder="Start writing...">
 
-    <!-- Main content goes here -->
+    </div>
 
-    <!-- our own footer goes here -->
+
     <site-footer></site-footer>
 
-    <!---------------------------------------------->
-    <!-- Your own JavaScript scripts go here      -->
-    <!---------------------------------------------->
 
-    <!-- <script type="module" src="/src/app.js"></script> -->
 
+    <script type="module" src="/src/app.js"></script>
+    <script type="module" src="/src/darkmode.js"></script>
+    <style>
+        #inp {
+            border: 2px solid black;
+            width: 40em;
+            height: 20em;
+            user-select: none;
+        }
+    </style>
+    <script>
+        const ar = document.getElementById('reviewr');
+        ar.addEventListener('click', () => {
+            window.location.replace('addReview.html')
+        })
+    </script>
 </body>
 
 </html>

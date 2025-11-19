@@ -1,4 +1,5 @@
-@import "../../node_modules/tailwindcss/dist/lib.d.mts";
+/* Import the compiled Tailwind CSS (not the .d.mts declaration file). */
+@import "tailwindcss/index.css";
 
 @theme {
   --font-zalando: "Zalando Sans", sans-serif;

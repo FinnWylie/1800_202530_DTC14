@@ -1,113 +1,337 @@
-const countries = [
-  { country: "Italy", city: "Rome" },
-  { country: "France", city: "Paris" },
-  { country: "USA", city: "New York" },
-  { country: "Japan", city: "Tokyo" },
-  { country: "Canada", city: "Toronto" },
-  { country: "Brazil", city: "Rio" },
-  { country: "Australia", city: "Sydney" },
-  { country: "Spain", city: "Barcelona" },
-];
+// src/homescript.js
+// Home page - fetches data from Firestore and displays recommendations
 
-const restaurants = [
-  "Olive Garden",
-  "La Piazza",
-  "Nobu",
-  "Sushi Go",
-  "Le Gourmet",
-  "BBQ Nation",
-  "Taco Fiesta",
-  "Burger Boss",
-];
+import { db, auth } from "./firebaseConfig.js";
+import { onAuthReady } from "./authentication.js";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const ratings = [3, 4, 4.5, 5];
+const HEART_ICON_PATH = "/images/heart-svgrepo-com.svg";
+let currentUser = null;
+let heartIconMarkup = null;
 
-function getRandomItem(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+onAuthReady((user) => {
+  currentUser = user;
+});
 
-function generateStars(rating) {
+// Helper functions
+const getRandomItems = (arr, count) => {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+};
+
+const generateStars = (rating) => {
   const fullStars = Math.floor(rating);
-  const half = rating % 1 !== 0;
-  return "★".repeat(fullStars) + (half ? "½" : "");
-}
+  return "★".repeat(fullStars) + (rating % 1 !== 0 ? "½" : "");
+};
 
-function createCard(type) {
+const formatName = (name) => {
+  return name
+    .replace(/_/g, " ")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
+const loadHeartIcon = async () => {
+  if (heartIconMarkup) return heartIconMarkup;
+  try {
+    const response = await fetch(HEART_ICON_PATH);
+    heartIconMarkup = await response.text();
+    return heartIconMarkup;
+  } catch {
+    heartIconMarkup =
+      '<svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 21l-8-8a5.5 5.5 0 0 1 7.778-7.778L12 5.444l.222-.222A5.5 5.5 0 0 1 20 13l-8 8z" stroke="#ccc" fill="none"/></svg>';
+    return heartIconMarkup;
+  }
+};
+
+// Check if item is saved and get document ID
+const getSavedItemId = async (type, data) => {
+  if (!currentUser) return null;
+  try {
+    const conditions = [
+      where("userId", "==", currentUser.uid),
+      where("type", "==", type),
+      where(
+        type === "place" ? "country" : "name",
+        "==",
+        data[type === "place" ? "country" : "name"]
+      ),
+    ];
+    if (type === "place") conditions.push(where("city", "==", data.city));
+
+    const q = query(collection(db, "savedItems"), ...conditions);
+    const snapshot = await getDocs(q);
+    return snapshot.empty ? null : snapshot.docs[0].id;
+  } catch {
+    return null;
+  }
+};
+
+// Save/delete item
+const saveItem = async (type, data) => {
+  if (!currentUser) {
+    alert("Please log in to save items");
+    return false;
+  }
+  try {
+    await addDoc(collection(db, "savedItems"), {
+      userId: currentUser.uid,
+      type,
+      ...data,
+      savedAt: serverTimestamp(),
+    });
+    return true;
+  } catch (error) {
+    console.error("Error saving item:", error);
+    alert("Failed to save item");
+    return false;
+  }
+};
+
+const deleteItem = async (docId) => {
+  if (!currentUser) return false;
+  try {
+    await deleteDoc(doc(db, "savedItems", docId));
+    return true;
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    alert("Failed to delete item");
+    return false;
+  }
+};
+
+// Create heart button with save/delete toggle
+const createHeartButton = (label, type, data) => {
+  const button = document.createElement("button");
+  button.className =
+    "absolute top-3 right-3 rounded-full shadow-sm p-1.5 bg-white/90 hover:scale-105 transition-all";
+  button.setAttribute("aria-label", label);
+  button.setAttribute("aria-pressed", "false");
+
+  let pathElement = null;
+  let savedDocId = null;
+
+  const updateHeartState = (saved) => {
+    button.setAttribute("aria-pressed", saved);
+    if (pathElement) {
+      if (saved) {
+        pathElement.setAttribute("fill", "#FF2D55");
+        pathElement.setAttribute("stroke", "#FF2D55");
+        button.style.backgroundColor = "rgba(255,45,85,0.12)";
+      } else {
+        pathElement.setAttribute("fill", "none");
+        pathElement.setAttribute("stroke", "#000");
+        button.style.backgroundColor = "rgba(255,255,255,0.92)";
+      }
+    }
+  };
+
+  loadHeartIcon().then((markup) => {
+    button.innerHTML = markup;
+    const svg = button.querySelector("svg");
+    svg?.setAttribute("width", "24");
+    svg?.setAttribute("height", "24");
+    pathElement = button.querySelector("path");
+    if (pathElement) {
+      pathElement.setAttribute("fill", "none");
+      pathElement.setAttribute("stroke", "#000");
+      pathElement.setAttribute("stroke-width", "1.8");
+    }
+  });
+
+  getSavedItemId(type, data).then((docId) => {
+    savedDocId = docId;
+    if (docId) updateHeartState(true);
+  });
+
+  button.addEventListener("click", async () => {
+    const isSaved = button.getAttribute("aria-pressed") === "true";
+    if (!isSaved) {
+      const success = await saveItem(type, data);
+      if (success) {
+        savedDocId = await getSavedItemId(type, data);
+        updateHeartState(true);
+      }
+    } else if (savedDocId) {
+      const success = await deleteItem(savedDocId);
+      if (success) {
+        savedDocId = null;
+        updateHeartState(false);
+      }
+    }
+  });
+
+  return button;
+};
+
+// Create card components
+const createCard = (type, data, heartData) => {
   const div = document.createElement("div");
   div.className =
-    "bg-neutral-300 rounded-2xl font-medium w-44 h-36 py-4 px-5 content-end shrink-0";
+    "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
 
-  if (type === "places" || type === "popular") {
-    const place = getRandomItem(countries);
-    div.innerHTML = `<h1>${place.country}</h1><h1>${place.city}</h1>`;
-  } else if (type === "restaurants") {
-    const name = getRandomItem(restaurants);
-    const rating = getRandomItem(ratings);
-    div.innerHTML = `<p>${name}</p><p class="text-yellow-600">${generateStars(
-      rating
-    )}</p>`;
+  div.appendChild(createHeartButton(`Save this ${type}`, type, heartData));
+
+  const content = document.createElement("div");
+  content.className = "flex h-full flex-col justify-end gap-1";
+
+  if (type === "place") {
+    content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
+  } else if (type === "restaurant") {
+    content.innerHTML = `<p>${
+      data.name
+    }</p><p class="text-yellow-600">${generateStars(data.rating)}</p>`;
+  } else {
+    content.innerHTML = `<p>${data.name}</p>`;
   }
 
+  div.appendChild(content);
   return div;
-}
-
-const history = {
-  places: [[]],
-  restaurants: [[]],
-  popular: [[]],
 };
 
-const indices = {
-  places: 0,
-  restaurants: 0,
-  popular: 0,
-};
+// Fetch places from countries subcollections
+const fetchPlaces = async (count = 6) => {
+  const knownCountries = [
+    "Argentina",
+    "Australia",
+    "Austria",
+    "Belgium",
+    "Brazil",
+    "Canada",
+    "Chile",
+    "China",
+    "Colombia",
+    "Czech_Republic",
+    "Denmark",
+    "Egypt",
+    "Finland",
+    "France",
+    "Germany",
+    "Greece",
+    "Hungary",
+    "India",
+    "Indonesia",
+  ];
 
-function renderCards(containerId, type) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  const cards = history[type][indices[type]];
-  cards.forEach((card) => container.appendChild(card));
-}
-
-function generateNewCards(type, count) {
-  const cards = [];
-  for (let i = 0; i < count; i++) {
-    cards.push(createCard(type));
+  const allPlaces = [];
+  for (const countryId of knownCountries) {
+    try {
+      const citiesSnapshot = await getDocs(
+        collection(db, "countries", countryId, "cities")
+      );
+      citiesSnapshot.forEach((cityDoc) => {
+        const cityData = cityDoc.data();
+        allPlaces.push({
+          countryName: formatName(countryId),
+          cityName: formatName(cityData.name || cityData.city || cityDoc.id),
+          imageUrl: cityData.imageUrl || cityData.image || "",
+        });
+      });
+    } catch (error) {
+      console.warn(`Error accessing ${countryId}:`, error.message);
+    }
   }
-  return cards;
-}
 
-function handleHorizontalScroll(containerId, type) {
-  const container = document.getElementById(containerId);
-  let throttled = false;
+  return allPlaces.length > 0 ? getRandomItems(allPlaces, count) : [];
+};
 
-  container.addEventListener("scroll", () => {
-    if (throttled) return;
-
-    const scrollLeft = container.scrollLeft;
-    const maxScrollLeft = container.scrollWidth - container.clientWidth;
-
-    if (scrollLeft <= 0 && indices[type] > 0) {
-      indices[type]--;
-      renderCards(containerId, type);
-    }
-
-    if (scrollLeft >= maxScrollLeft - 10) {
-      indices[type]++;
-      if (!history[type][indices[type]]) {
-        history[type][indices[type]] = generateNewCards(type, 5);
+// Seed and fetch data
+const fetchData = async (collectionName, seedData, count = 6) => {
+  try {
+    const ref = collection(db, collectionName);
+    const snapshot = await getDocs(ref);
+    if (snapshot.empty) {
+      for (const item of seedData) {
+        await addDoc(ref, { ...item, createdAt: serverTimestamp() });
       }
-      renderCards(containerId, type);
     }
+    const items = [];
+    (await getDocs(ref)).forEach((doc) =>
+      items.push({ id: doc.id, ...doc.data() })
+    );
+    return getRandomItems(items, count);
+  } catch (error) {
+    console.error(`Error fetching ${collectionName}:`, error);
+    return [];
+  }
+};
 
-    throttled = true;
-    setTimeout(() => (throttled = false), 300);
-  });
+// Initialize page
+const initializePage = async () => {
+  const restaurantsData = [
+    { name: "Olive Garden", rating: 4.5, type: "Italian" },
+    { name: "La Piazza", rating: 4.8, type: "Italian" },
+    { name: "Nobu", rating: 4.7, type: "Japanese" },
+    { name: "Sushi Go", rating: 4.3, type: "Japanese" },
+    { name: "Le Gourmet", rating: 4.9, type: "French" },
+    { name: "BBQ Nation", rating: 4.4, type: "American" },
+    { name: "Taco Fiesta", rating: 4.2, type: "Mexican" },
+    { name: "Burger Boss", rating: 4.6, type: "American" },
+    { name: "Thai House", rating: 4.5, type: "Thai" },
+    { name: "Curry House", rating: 4.4, type: "Indian" },
+  ];
+
+  const activitiesData = [
+    { name: "Museum Tour", type: "Museum", rating: 4.5 },
+    { name: "Central Park", type: "Park", rating: 4.8 },
+    { name: "Beach Day", type: "Beach", rating: 4.7 },
+    { name: "Mountain Hiking", type: "Mountain", rating: 4.6 },
+    { name: "Temple Visit", type: "Temple", rating: 4.4 },
+    { name: "Castle Tour", type: "Castle", rating: 4.9 },
+    { name: "Local Market", type: "Market", rating: 4.3 },
+    { name: "Botanical Garden", type: "Garden", rating: 4.5 },
+    { name: "Historic Monument", type: "Monument", rating: 4.6 },
+    { name: "Theater Show", type: "Theater", rating: 4.7 },
+  ];
+
+  const places = await fetchPlaces(6);
+  const restaurants = await fetchData("restaurants", restaurantsData, 6);
+  const activities = await fetchData("activities", activitiesData, 6);
+
+  const displayCards = (containerId, cards) => {
+    const container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = "";
+      cards.forEach((card) => container.appendChild(card));
+    }
+  };
+
+  displayCards(
+    "places-container",
+    places.map((p) =>
+      createCard("place", p, {
+        country: p.countryName,
+        city: p.cityName,
+        imageUrl: p.imageUrl,
+      })
+    )
+  );
+  displayCards(
+    "restaurants-container",
+    restaurants.map((r) =>
+      createCard("restaurant", r, { name: r.name, rating: r.rating })
+    )
+  );
+  displayCards(
+    "popular-container",
+    activities.map((a) =>
+      createCard("activity", a, { name: a.name, type: a.type || "" })
+    )
+  );
+};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializePage);
+} else {
+  initializePage();
 }
-
-["places", "restaurants", "popular"].forEach((type) => {
-  history[type][0] = generateNewCards(type, 5);
-  renderCards(`${type}-container`, type);
-  handleHorizontalScroll(`${type}-container`, type);
-});

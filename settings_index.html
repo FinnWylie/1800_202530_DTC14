@@ -18,12 +18,15 @@
     <script type="module" src="/src/components/site-navbar.js"></script>
     <script type="module" src="/src/components/site-footer.js"></script>
 
+
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link href="styles.css" rel="stylesheet"> <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
 
 </head>
 
-<body style="background-color: #f5f5f0;" class="nohover">
+<body style="background-color: #f5f5f0;">
 
     <site-navbar></site-navbar>
     <div class="p-4">
@@ -34,7 +37,7 @@
                 <span id="spanu" style="margin-left: 1.7em;">User Profile</span>
                 <div id="padding" style="padding: .5em; display: none;"></div>
                 <div id="submenu">Username: </div>
-                <div id="submenus">Password: </div>
+                <div id="submenus">Country: </div>
                 <div id="sub">Email: </div>
                 <div id="clm">Close Submenu</div>
             </div>
@@ -71,7 +74,7 @@
         <br>
         <div id="cont">
             <div id="so">
-                <span style="margin-left: 1.7em;">Sign out</span>
+                <span id="contin" style="margin-left: 1.7em;">Sign out</span>
             </div>
             <svg id="svgi" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
                 stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
@@ -88,6 +91,7 @@
 
     <script src="src/settings_script.js"></script>
     <script type="module" src="/src/app.js"></script>
+    <script type="module" src="/src/darkmode.js"></script>
     <style>
         #svgi {
             stroke: #3a4f41ff;
@@ -95,6 +99,10 @@
             margin-top: -2.9em;
             scale: 1;
             margin-left: 0.5em;
+        }
+
+        .darkmode {
+            background-color: black !important;
         }
 
         #cont:hover #svgi {

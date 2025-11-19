@@ -13,11 +13,11 @@ import { db } from "./firebaseConfig.js";
 // Import specific functions from the Firebase Auth SDK
 
 import {
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    updateProfile,
-    onAuthStateChanged,
-    signOut,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+  signOut,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -55,23 +55,23 @@ export async function loginUser(email, password) {
 //   const user = await signupUser("Alice", "alice@email.com", "secret");
 // -------------------------------------------------------------
 export async function signupUser(name, email, password) {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user; // Get the user object
-    await updateProfile(user, { displayName: name });
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user; // Get the user object
+  await updateProfile(user, { displayName: name });
 
-    try {
-        await setDoc(doc(db, "users", user.uid), {
-            name: name,
-            email: email,
-            country: "Canada", // Default value
-            school: "BCIT"     // Default value
-        });
-        console.log("Firestore user document created successfully!");
-    } catch (error) {
-        console.error("Error creating user document in Firestore:", error);
-    }
+  try {
+    await setDoc(doc(db, "users", user.uid), {
+      name: name,
+      email: email,
+      country: "Canada", // Default value
+      school: "BCIT"    // Default value
+    });
+    console.log("Firestore user document created successfully!");
+  } catch (error) {
+    console.error("Error creating user document in Firestore:", error);
+  }
 
-    return user;
+  return user;
 }
 
 // -------------------------------------------------------------
@@ -86,6 +86,7 @@ export async function signupUser(name, email, password) {
 export async function logoutUser() {
   await signOut(auth);
   window.location.href = "settings_index.html";
+
 }
 
 // -------------------------------------------------------------

@@ -1,3 +1,5 @@
+
+
 const notif = document.getElementById('userp');
 const submenu = document.getElementById('submenu');
 const submenus = document.getElementById('submenus');
@@ -58,7 +60,7 @@ notif.addEventListener('click', () => {
 });
 
 clm.addEventListener('click', (e) => {
-    e.stopPropagation(); // prevent notif's click from firing
+    e.stopPropagation();
     submenu.style.display = "none";
     submenus.style.display = "none";
     notif.classList.add('nohover');
