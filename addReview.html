@@ -29,7 +29,7 @@
     <site-navbar></site-navbar>
     <div class="p-4">
         <div id="review">
-            <span>Add Review</span>
+            <span>Write your review</span>
         </div>
         <br>
         <br>
@@ -37,35 +37,7 @@
             <span>Placeholder text</span>
         </div>
         <br>
-        <div id="container">
-            <div id="image1">
-                <div class="bg-white w-36 h-24 flex items-center justify-center">
-                    <p>Image</p>
-                </div>
-
-                <!--text related-->
-
-                <div style="margin-left: 10em; margin-top: -5em;">Review:
-                    <span>★★★★★</span>
-                    <div>Lorem ipsum is simply dummy text</div>
-                </div>
-
-            </div>
-            <!--image related-->
-            <div style="padding-top: 4em;" id="image2">
-
-                <div class="bg-white w-36 h-24 flex items-center justify-center">
-                    <p>Image</p>
-                </div>
-
-                <!--text related-->
-
-                <div style="margin-left: 10em; margin-top: -5em;">Review:
-                    <span>★★★★★</span>
-                    <div>Lorem ipsum is simply dummy text</div>
-                </div>
-            </div>
-        </div>
+        <input id="inp" type="text" placeholder="Start writing...">
 
     </div>
 
@@ -75,8 +47,14 @@
 
 
     <script type="module" src="/src/app.js"></script>
+    <script type="module" src="/src/darkmode.js"></script>
     <style>
-        /* just in case */
+        #inp {
+            border: 2px solid black;
+            width: 40em;
+            height: 20em;
+            user-select: none;
+        }
     </style>
     <script>
         const ar = document.getElementById('reviewr');
