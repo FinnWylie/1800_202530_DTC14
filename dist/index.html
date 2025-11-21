@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My BCIT Project</title>
+    <meta name="comp1800 template" content="My 1800 App">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Web Components for shared navbar and footer layout -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="styles.css" rel="stylesheet"> <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
+
+  <script type="module" crossorigin src="/assets/index-DL0epLxa.js"></script>
+</head>
+
+<body style="background-color: white;">
+    <!------------------------------>
+    <!-- Your HTML Layout go here -->
+    <!------------------------------>
+
+    <!-- our own navbar goes here -->
+    <site-navbar></site-navbar>
+
+    <!-- Main content goes here -->
+    <main class="px-6">
+        <button onclick="window.location.href='loginSignup.html'" type="submit"
+            class="mt-5 content-center border-2 border-black rounded-xl bg-[#5D866C] text-lg text-white p-2 w-full">
+            Login
+        </button>
+    </main>
+
+    <!-- our own footer goes here -->
+    <site-footer></site-footer>
+
+    <!---------------------------------------------->
+    <!-- Your own JavaScript scripts go here      -->
+    <!---------------------------------------------->
+    <!-- <script type="module" src="/src/app.js"></script> -->
+
+</body>
+
+</html>
