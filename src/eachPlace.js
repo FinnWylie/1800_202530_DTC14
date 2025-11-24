@@ -6,7 +6,7 @@ import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.
 // ============================================
 // CHANGE THIS TO USE A DIFFERENT PAGE
 // ============================================
-const PAGE_TITLE = 'Vancouver';  // Replace with any Wikipedia page title
+const PAGE_TITLE = localStorage["location_name"];  // Replace with any Wikipedia page title
 // ============================================
 
 async function loadWikipediaPage() {

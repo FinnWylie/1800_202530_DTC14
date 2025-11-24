@@ -362,8 +362,8 @@ searchInput.addEventListener('input',  () => {
             suggestionItem.classList.add('duration-100')
             suggestionItem.textContent = result;
             suggestionItem.addEventListener('click', () => {
-                searchInput.value = result;
-                suggestions.innerHTML = '';
+                localStorage["location_name"] = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
+                location.href=`../eachPlace.html`
             });
             suggestions.appendChild(suggestionItem);
         });
