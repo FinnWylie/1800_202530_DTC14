@@ -26,23 +26,26 @@ class SiteFooter extends HTMLElement {
                     </button>
         
                     <!-- Reviews -->
-                    <button id="test2" onclick="location.href='review_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
-                             fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/>
-                        </svg>
-                        <p class="text-base font-medium">Reviews</p>
-                    </button>
-        
+                    <div id="real3"  class="flex flex-col items-center mx-auto w-[64px]">
+                        <button id="test2" onclick="location.href='review_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/>
+                            </svg>
+                            <p class="text-base font-medium">Reviews</p>
+                        </button>
+                    </div>
                     <!-- Saved -->
-                    <button  id="test3" onclick="location.href='saved_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
-                             fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4z"/>
-                        </svg>
-                        <p class="text-base font-medium">Saved</p>
-                    </button>
-        
+
+                    <div id="realtwo"  class="flex flex-col items-center mx-auto w-[64px]">
+                        <button  id="test3" onclick="location.href='saved_index.html'" class="flex flex-col items-center mx-auto w-[64px]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                                fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4z"/>
+                            </svg>
+                            <p class="text-base font-medium">Saved</p>
+                        </button>
+                    </div>
                     <!-- Profile -->
                     <div id="realone"  class="flex flex-col items-center mx-auto w-[64px]">
                         <button id="test4" onclick="location.href='settings_index.html'" class="flex flex-col items-center mx-auto w-[64px]">

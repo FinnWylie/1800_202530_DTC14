@@ -192,3 +192,9 @@
     cursor: pointer;
     transition: all .5s ease;
 }
+
+#📧:hover {
+    background-color: #c2a68c;
+    cursor: pointer;
+    transition: all .5s ease;
+}
