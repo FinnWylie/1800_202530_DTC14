@@ -335,11 +335,15 @@ const preDefinedSuggestions = [
     "Thessaloniki, Greece",
     "Prague, Czech_Republic",
     "Budapest, Hungary",
-    "Bucharest, Romania"
+    "Bucharest, Romania",
+    "Tegucigalpa, Honduras",
+    "Funafuti, Tuvalu",
+    "Malé, Maldives"
+
 ];
 
 // Add event listener to input
-searchInput.addEventListener('input',  () => {
+searchInput.addEventListener('input', () => {
     const query = searchInput.value.toLowerCase();
     suggestions.innerHTML = '';
 
@@ -352,8 +356,7 @@ searchInput.addEventListener('input',  () => {
         filteredResults.sort()  // make it alphabetical order
 
         filteredResults.forEach(result => {  // add to html
-            const suggestionItem = document.createElement('div');
-            suggestionItem.classList.add('autocomplete-suggestion');
+            const suggestionItem = document.createElement('div'); suggestionItem.classList.add('autocomplete-suggestion');
             suggestionItem.classList.add('p-2.5');
             suggestionItem.classList.add('cursor-pointer');
             suggestionItem.classList.add('hover:bg-[#e6d8c3]');
@@ -362,8 +365,21 @@ searchInput.addEventListener('input',  () => {
             suggestionItem.classList.add('duration-100')
             suggestionItem.textContent = result;
             suggestionItem.addEventListener('click', () => {
-                localStorage["location_name"] = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
-                location.href=`../eachPlace.html`
+                if (localStorage["location_name"] === "Abbotsford") {
+                    localStorage.setItem("location_name", 'Abbotsford, _British_Columbia')
+                    location.href = `../eachPlace.html`
+
+                }
+                if (localStorage["location_name"] === "Salvador") {
+                    localStorage.setItem("location_name", 'Salvador,_Bahia')
+                    location.href = `../eachPlace.html`
+
+                }
+                else {
+                    localStorage["location_name"] = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
+                    location.href = `../eachPlace.html`
+
+                }
             });
             suggestions.appendChild(suggestionItem);
         });
