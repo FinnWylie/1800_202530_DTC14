@@ -29,8 +29,21 @@ const getRandomItems = (arr, count) => {
 };
 
 const generateStars = (rating) => {
-  const fullStars = Math.floor(rating);
-  return "★".repeat(fullStars) + (rating % 1 !== 0 ? "½" : "");
+  // Round to nearest whole number and clamp between 0 and 5
+  const roundedRating = Math.min(5, Math.max(0, Math.round(rating)));
+  const emptyStars = 5 - roundedRating;
+
+  // Yellow stars for the rating
+  const yellowStars = "★".repeat(roundedRating);
+
+  // White stars for the remainder
+  const whiteStars = "★".repeat(emptyStars);
+
+  // Return HTML with proper styling
+  if (emptyStars > 0) {
+    return `<span class="text-yellow-600">${yellowStars}</span><span class="text-white">${whiteStars}</span>`;
+  }
+  return `<span class="text-yellow-600">${yellowStars}</span>`;
 };
 
 const formatName = (name) => {
@@ -188,9 +201,9 @@ const createCard = (type, data, heartData) => {
   if (type === "place") {
     content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
   } else if (type === "restaurant") {
-    content.innerHTML = `<p>${
-      data.name
-    }</p><p class="text-yellow-600">${generateStars(data.rating)}</p>`;
+    content.innerHTML = `<p>${data.name}</p><p>${generateStars(
+      data.rating
+    )}</p>`;
   } else {
     content.innerHTML = `<p>${data.name}</p>`;
   }
@@ -325,7 +338,7 @@ const initializePage = async () => {
   displayCards(
     "popular-container",
     activities.map((a) =>
-      createCard("activity", a, { name: a.name, type: a.type || "" })
+      createCard("activity", a, { name: a.name, activityType: a.type || "" })
     )
   );
 };
