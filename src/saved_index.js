@@ -149,7 +149,9 @@ const createSavedItemCard = (item) => {
     }</h1>${rating ? `<p>${rating}</p>` : ""}`;
   } else if (item.type === "activity") {
     content.innerHTML = `<h1 class="font-bold">${item.name || "Activity"}</h1>${
-      item.type ? `<p class="text-gray-600 text-sm">${item.type}</p>` : ""
+      item.activityType
+        ? `<p class="text-gray-600 text-sm">${item.activityType}</p>`
+        : ""
     }`;
   }
 

@@ -338,7 +338,7 @@ const initializePage = async () => {
   displayCards(
     "popular-container",
     activities.map((a) =>
-      createCard("activity", a, { name: a.name, type: a.type || "" })
+      createCard("activity", a, { name: a.name, activityType: a.type || "" })
     )
   );
 };
