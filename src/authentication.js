@@ -6,21 +6,20 @@
 // (login, signup, logout, and auth state checks).
 // -------------------------------------------------------------
 
-// Import the initialized Firebase Authentication object
-import { auth } from "./firebaseConfig.js";
-import { db } from "./firebaseConfig.js";
+// Import initialized Firebase instances
+import { auth, db } from "./firebaseConfig.js";
 
 // Import specific functions from the Firebase Auth SDK
-
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  onAuthStateChanged,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    onAuthStateChanged,
+    signOut
+} from "firebase/auth";
 
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// Modular Firestore SDK
+import { doc, setDoc } from "firebase/firestore";
 
 // -------------------------------------------------------------
 // loginUser(email, password)
@@ -36,7 +35,7 @@ import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-
 //   await loginUser("user@example.com", "password123");
 // -------------------------------------------------------------
 export async function loginUser(email, password) {
-  return signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password);
 }
 
 // -------------------------------------------------------------
@@ -55,23 +54,29 @@ export async function loginUser(email, password) {
 //   const user = await signupUser("Alice", "alice@email.com", "secret");
 // -------------------------------------------------------------
 export async function signupUser(name, email, password) {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user; // Get the user object
-  await updateProfile(user, { displayName: name });
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
 
-  try {
-    await setDoc(doc(db, "users", user.uid), {
-      name: name,
-      email: email,
-      country: "Canada", // Default value
-      school: "BCIT"    // Default value
-    });
-    console.log("Firestore user document created successfully!");
-  } catch (error) {
-    console.error("Error creating user document in Firestore:", error);
-  }
+    await updateProfile(user, { displayName: name });
 
-  return user;
+    try {
+        const { uid, displayName } = userCredential.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+            uid,
+            name: displayName,     // FIXED: correct field
+            email,
+            country: "Canada",
+            school: "BCIT",
+            history: []            // FIXED: initialize history so arrayUnion never fails
+        });
+
+        console.log("Firestore user document created successfully!");
+    } catch (error) {
+        console.error("Error creating user document in Firestore:", error);
+    }
+
+    return user;
 }
 
 // -------------------------------------------------------------
@@ -84,9 +89,8 @@ export async function signupUser(name, email, password) {
 //   await logoutUser();
 // -------------------------------------------------------------
 export async function logoutUser() {
-  await signOut(auth);
-  window.location.href = "settings_index.html";
-
+    await signOut(auth);
+    window.location.href = "settings_index.html";
 }
 
 // -------------------------------------------------------------
@@ -105,16 +109,16 @@ export async function logoutUser() {
 //   checkAuthState();
 // -------------------------------------------------------------
 export function checkAuthState() {
-  onAuthStateChanged(auth, (user) => {
-    if (window.location.pathname.endsWith("main.html")) {
-      if (user) {
-        const displayName = user.displayName || user.email;
-        $("#welcomeMessage").text(`Hello, ${displayName}!`);
-      } else {
-        window.location.href = "settings_index.html";
-      }
-    }
-  });
+    onAuthStateChanged(auth, (user) => {
+        if (window.location.pathname.endsWith("main.html")) {
+            if (user) {
+                const displayName = user.displayName || user.email;
+                $("#welcomeMessage").text(`Hello, ${displayName}!`);
+            } else {
+                window.location.href = "settings_index.html";
+            }
+        }
+    });
 }
 
 // -------------------------------------------------------------
@@ -124,7 +128,7 @@ export function checkAuthState() {
 // Runs the given callback(user) when Firebase resolves or changes auth state.
 // Useful for showing user info or redirecting after login/logout.
 export function onAuthReady(callback) {
-  return onAuthStateChanged(auth, callback);
+    return onAuthStateChanged(auth, callback);
 }
 
 // -------------------------------------------------------------
@@ -133,20 +137,19 @@ export function onAuthReady(callback) {
 // Maps Firebase Auth error codes to short, user-friendly messages.
 // Helps display clean error alerts instead of raw Firebase codes.
 export function authErrorMessage(error) {
-  const code = (error?.code || "").toLowerCase();
+    const code = (error?.code || "").toLowerCase();
 
-  const map = {
-    "auth/invalid-credential": "Wrong email or password.",
-    "auth/invalid-email": "Please enter a valid email address.",
-    "auth/user-not-found": "No account found with that email.",
-    "auth/wrong-password": "Incorrect password.",
-    "auth/too-many-requests": "Too many attempts. Try again later.",
-    "auth/email-already-in-use": "Email is already in use.",
-    "auth/weak-password": "Password too weak (min 6 characters).",
-    "auth/missing-password": "Password cannot be empty.",
-    "auth/network-request-failed": "Network error. Try again.",
-  };
+    const map = {
+        "auth/invalid-credential": "Wrong email or password.",
+        "auth/invalid-email": "Please enter a valid email address.",
+        "auth/user-not-found": "No account found with that email.",
+        "auth/wrong-password": "Incorrect password.",
+        "auth/too-many-requests": "Too many attempts. Try again later.",
+        "auth/email-already-in-use": "Email is already in use.",
+        "auth/weak-password": "Password too weak (min 6 characters).",
+        "auth/missing-password": "Password cannot be empty.",
+        "auth/network-request-failed": "Network error. Try again.",
+    };
 
-  return map[code] || "Something went wrong. Please try again.";
+    return map[code] || "Something went wrong. Please try again.";
 }
-

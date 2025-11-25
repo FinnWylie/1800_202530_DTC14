@@ -4,15 +4,16 @@
 import { db, auth } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
 import {
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  query,
-  where,
-  serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    collection,
+    getDocs,
+    addDoc,
+    deleteDoc,
+    doc,
+    query,
+    where,
+    serverTimestamp,
+} from "firebase/firestore";
+
 
 const HEART_ICON_PATH = "/images/heart-svgrepo-com.svg";
 let currentUser = null;

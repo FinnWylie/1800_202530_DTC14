@@ -5,14 +5,15 @@
 import { db } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
 import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc,
-  query,
-  where,
-  orderBy,
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    collection,
+    getDocs,
+    deleteDoc,
+    doc,
+    query,
+    where,
+    orderBy,
+} from "firebase/firestore";
+
 
 let currentUser = null;
 
