@@ -26,15 +26,16 @@
     rel="stylesheet">
 </head>
 
-<body style="background-color: #f5f5f0;">
+<body class="bg-white">
 
   <site-navbar></site-navbar>
+
   <div class="p-4">
-    <div id="review">
+    <div id="review" class="bg-[#F5F3F1] text-[#254430] rounded-xl px-3 py-1 text-xl font-semibold border-2 border-[#5d866c]">
       <span>Reviews</span>
     </div>
     <div style="display: inline-flex; gap: 4; align-items: center;" id="reviewr">
-      <button style="margin-top: 3em;" id="areview">
+      <button style="margin-top: 3em;" id="areview" class="text-[#F5F3F1] bg-[#5d866c] rounded-xl px-3 py-1 border-2 border-[#254430]">
         <span>Add Review</span>
       </button>
       <svg id="svging" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -44,11 +45,11 @@
       </svg>
     </div>
 
-    <div style="margin-top: 1em;" id="mreview">
+    <div style="margin-top: 1em;" id="mreview" class="bg-[#F5F3F1] text-[#254430] rounded-xl p-2 px-3 text-xl font-semibold border-2 border-[#5d866c]">
       <span>My Reviews</span>
     </div>
     <br>
-    <div id="container">
+    <div id="container" class="bg-[#F5F3F1] text-[#254430] rounded-xl px-3 py-1 border-2 border-[#5d866c]">
       <div id="image1">
         <div class="bg-white w-36 h-24 flex items-center justify-center">
           <p>Image</p>
@@ -91,8 +92,9 @@
 
 
   <script type="module" src="/src/app.js"></script>
-  <script type="module" src="/src/darkmode.js"></script>
+<!--  <script type="module" src="/src/darkmode.js"></script>-->
   <script type="module" src="/src/test.js"></script>
+
   <style>
     #svging {
       stroke: #3a4f41ff;
@@ -111,7 +113,7 @@
       transform: rotate(360deg);
       cursor: pointer;
       transition: all 1s ease;
-      stroke: #5D866C;
+      stroke: #F5F3F1;
       stroke-opacity: 1;
       stroke-width: .1em;
     }

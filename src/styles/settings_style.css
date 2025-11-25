@@ -1,54 +1,53 @@
 /*containers*/
 
 #settings {
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
-    border: black 2px solid;
+    border: #5d866c 2px solid;
     font-family: "Fira Sans";
 }
 
 #userp {
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
-    border: #37433b 2px solid;
+    border: #5d866c 2px solid;
     font-family: "Fira Sans";
 }
 
 #notif {
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     padding: 1em;
-    margin-top: 1em;
     transition: all .5s ease;
     border-radius: 1em;
-    border: black 2px solid;
+    border: #5d866c 2px solid;
     font-family: "Fira Sans";
 }
 
 #supp {
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
-    border: black 2px solid;
+    border: #5d866c 2px solid;
     font-family: "Fira Sans";
 }
 
 
 #so {
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
-    border: black 2px solid;
+    border: #5d866c 2px solid;
     font-family: "Fira Sans";
 }
 
 #submenu {
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     padding: 1em;
     transition: all .5s ease;
     font-family: "Fira Sans";
@@ -57,7 +56,7 @@
 #submenu {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     transition: all .5s ease;
     font-family: "Fira Sans";
 }
@@ -65,7 +64,7 @@
 #submenus {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -73,7 +72,7 @@
 #sub {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -81,7 +80,7 @@
 #clm {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -90,7 +89,7 @@
 #🧲 {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     transition: all .5s ease;
     font-family: "Fira Sans";
 }
@@ -98,7 +97,7 @@
 #🅿️ {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -106,7 +105,7 @@
 #📧 {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -114,7 +113,7 @@
 #❌ {
     padding: 1em;
     display: none;
-    background-color: #e6d8c3;
+    background-color: #f5f3f1;
     font-family: "Fira Sans";
     transition: all .5s ease;
 }
@@ -122,79 +121,79 @@
 /*hover effects*/
 
 #userp.nohover:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #supp:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #settings:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #so:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #clm:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #notif:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #submenu:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #submenus:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #sub:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #🧲:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #🅿️:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #❌:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }
 
 #📧:hover {
-    background-color: #c2a68c;
+    background-color: #E6D8C3;
     cursor: pointer;
     transition: all .5s ease;
 }

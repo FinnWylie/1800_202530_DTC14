@@ -1,17 +1,17 @@
 /*containers*/
 
 #review {
-    background-color: #e6d8c3;
+    /*background-color: #e6d8c3;*/
     padding: .5em;
     transition: all .5s ease;
     border-radius: .75rem;
-    border: black 2px solid;
+    /*border: black 2px solid;*/
     font-family: "Fira Sans";
-    font-size: 1.4rem;
+    /*font-size: 1.4rem;*/
 }
 
 #areview {
-    background-color: #d4c0ad;
+    /*background-color: #d4c0ad;*/
     padding: .7em;
     transition: all .5s ease;
     border-radius: 1.6em;
@@ -21,16 +21,16 @@
 
 
 #mreview {
-    background-color: #e6d8c3;
-    padding: 1em;
+    /*background-color: #e6d8c3;*/
+    padding: .5em;
     transition: all .5s ease;
     border-radius: .75rem;
-    border: black 2px solid;
+    /*border: black 2px solid;*/
     font-family: "Fira Sans";
 }
 
 #container {
-    background-color: #d4c0ad;
+    /*background-color: #d4c0ad;*/
     padding: 1em;
     transition: all .5s ease;
     border-radius: 1em;
@@ -39,7 +39,7 @@
 }
 
 #areview:hover {
-    background-color: #c2a68c;
+    background-color: #254430;
     cursor: pointer;
     transition: all .5s ease;
 }

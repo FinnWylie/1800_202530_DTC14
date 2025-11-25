@@ -28,7 +28,7 @@
     </style>
 </head>
 
-<body>
+<body class="bg-white">
     <!------------------------------>
     <!-- Your HTML Layout go here -->
     <!------------------------------>
@@ -40,21 +40,12 @@
     <main class="px-4">
 
         <!-- Search section -->
-        <div id="searchBar" class="my-4 flex flex-col">
-            <div class="flex flex-col border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg max-h-min ">
-                <div class="flex flex-row p-2 ">
-                    <button id="btnFilter" class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
-                            stroke="#3C3E7C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
-                        </svg>
-
-                    </button>
-
+        <div id="searchBar" class="my-2 flex flex-col pt-2">
+            <div class="flex flex-col border-2 border-[#5d866c] rounded-xl bg-[#f5f3f1] text-lg max-h-min">
+                <div class="flex flex-row px-2 ">
                     <label for="searchInput"></label>
                     <input type="text" id="searchInput"
-                        class="flex-1 bg-[#F5F5F0] text-xl font-semibold px-2 -my-2 max-w-full outline-none"
+                        class="flex-1 bg-[#f5f3f1] text-xl font-semibold px-2 max-w-full outline-none"
                         placeholder="Enter a place" required />
                     <button id="btnSearch" class="">
                         <svg class="" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
@@ -75,7 +66,7 @@
         <div>
             <h1>Recently Viewed</h1>
             <div id="history"
-                class="flex flex-col border-2 border-gray-400 rounded-xl bg-[#F5F5F0] text-lg p-2 max-h-min ">
+                class="flex flex-col border-2 border-[#5d866c] rounded-xl bg-[#F5F3f1] text-lg p-2 max-h-min ">
                 <history-place id="history-place"></history-place>
             </div>
         </div>
@@ -90,7 +81,7 @@
 
     <!-- <script type="module" src="/src/app.js"></script> -->
     <script type="module" src="/src/searchIndex.js"></script>
-    <script type="module" src="/src/darkmode.js"></script>
+<!--    <script type="module" src="/src/darkmode.js"></script>-->
     <script type="module" src="/src/test.js"></script>
 </body>
 

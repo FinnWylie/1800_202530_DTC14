@@ -29,7 +29,8 @@ appear.addEventListener('click', () => {
     e3.style.display = "block";
     e4.style.display = "block"
     spanid.textContent = "Appearance Settings: "
-    appear.style.backgroundColor = "white";
+    appear.classList.remove('nohover')
+    // appear.style.backgroundColor = "white";
     padd.style.display = "block";
     svg.style.display = "none"
 })
@@ -41,7 +42,7 @@ e1.addEventListener('click', (e) => {
     e3.style.display = "none";
     e4.style.display = "none"
     padd.style.display = "none";
-    appear.style.backgroundColor = "#e6d8c3";
+    // appear.style.backgroundColor = "#e6d8c3";
     svg.style.display = "block"
     spanid.textContent = "Appearance "
 });
@@ -53,7 +54,7 @@ notif.addEventListener('click', () => {
     sub.style.display = "block"
     svgicon.style.display = "none"
     notif.classList.remove('nohover');
-    notif.style.backgroundColor = "white";
+    // notif.style.backgroundColor = "white";
     padding.style.display = "block";
     spanu.textContent = "User Settings:  ";
 
@@ -68,5 +69,5 @@ clm.addEventListener('click', (e) => {
     sub.style.display = "none"
     svgicon.style.display = "block"
     padding.style.display = "none";
-    notif.style.backgroundColor = "#e6d8c3";;
+    // notif.style.backgroundColor = "#e6d8c3";;
 });
