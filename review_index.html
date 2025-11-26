@@ -75,8 +75,8 @@
 
         <!--text related-->
 
-        <div style="margin-left: 10em; margin-top: -5em;">Review:
-          <span>★★★★★</span>
+        <div style="margin-left: 10em; margin-top: -5em;">Review for:
+          <span></span>
           <div>Lorem ipsum is simply dummy text</div>
         </div>
       </div>
@@ -120,12 +120,12 @@
     }
   </style>
   <script>
-    const ar = document.getElementById('reviewr');
-    ar.addEventListener('click', () => {
-      window.location.replace('addReview.html')
-    })
-    const lorem = document.getElementById('lorem');
-    lorem.innerHTML = localStorage.getItem("review")
+
+    const addReviewBtn = document.getElementById("areview");
+    addReviewBtn.addEventListener("click", () => {
+      window.location.replace("addReview.html");
+    });
+
   </script>
 </body>
 

@@ -1,7 +1,9 @@
 // Get elements
 const searchInput = document.getElementById('searchInput');
 const suggestions = document.getElementById('suggestions');
-
+import { db } from "./firebaseConfig.js";
+import { onAuthReady } from "./authentication.js";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 // Mock data
 const preDefinedSuggestions = [
     "Toronto, Canada",
@@ -342,17 +344,21 @@ const preDefinedSuggestions = [
 
 ];
 
-const btn = document.getElementById('donebtn');
+// const btn = document.getElementById('donebtn');
 
-btn.addEventListener('click', () => {
-    const inp = document.getElementById('inp').value
-    console.log(inp.value)
-    localStorage.setItem("review", inp)
-    window.location.replace('review_index.html')
-    if (inp == "") {
-        console.log("BAD!")
-    }
-})
+// btn.addEventListener('click', () => {
+//     const inp = document.getElementById('inp').value
+//     if (inp == "") {
+//         console.log("BAD!")
+
+//     }
+//     else {
+
+//         console.log(inp.value)
+//         localStorage.setItem("review", inp)
+//         window.location.replace('review_index.html')
+//     }
+// })
 
 // Add event listener to input
 searchInput.addEventListener('input', () => {
@@ -433,5 +439,83 @@ searchInput.addEventListener('input', () => {
 document.addEventListener('click', function (event) {
     if (event.target !== searchInput) {
         suggestions.innerHTML = '';
+    }
+});
+const doneBtn = document.getElementById("donebtn");
+const inp = document.getElementById("inp");
+const chosenPlace = document.getElementById("chosen-place");
+
+// UI: simple feedback message
+function showMessage(msg, isError = false) {
+    let el = document.getElementById("add-review-msg");
+    if (!el) {
+        el = document.createElement("div");
+        el.id = "add-review-msg";
+        el.style.marginTop = "1rem";
+        document.querySelector("#searchBar").appendChild(el);
+    }
+    el.textContent = msg;
+    el.style.color = isError ? "crimson" : "green";
+}
+
+let currentUser = null;
+
+// Wait for auth to be ready (you already used this pattern elsewhere)
+onAuthReady((user) => {
+    currentUser = user;
+    if (!user) {
+        showMessage("You must be signed in to add a review.", true);
+        doneBtn.disabled = true;
+        return;
+    }
+    doneBtn.disabled = false;
+});
+
+// Basic validation + submit handler
+doneBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    if (!currentUser) {
+        showMessage("Not signed in.", true);
+        return;
+    }
+
+    const text = (inp?.value || "").trim();
+    const place = (searchInput?.value || "").trim();
+
+    if (!text) {
+        showMessage("Please write a review before submitting.", true);
+        return;
+    }
+    else if (!place) {
+        showMessage("Please select a city", true)
+        return
+    }
+
+    // If you don't have images yet, keep imageUrl empty string
+    const imageUrl = ""; // default; replace later if you add upload
+
+    const payload = {
+        text,
+        imageUrl,
+        userId: currentUser.uid,
+        place: place || null,
+        createdAt: serverTimestamp(),
+    };
+
+    try {
+        const reviewsRef = collection(db, "reviews");
+        const docRef = await addDoc(reviewsRef, payload);
+
+        showMessage("Your review has been saved succesfully ✅");
+        setTimeout(function () { window.location.replace("review_index.html") }, 500)
+        inp.value = "";
+        searchInput.value = "";
+        // If you want to redirect back to reviews page:
+        // window.location.href = "/path/to/reviews.html";
+        console.log("Review created with ID:", docRef.id);
+    } catch (err) {
+        console.error("Error saving review:", err);
+        showMessage("Error saving review. See console.", true);
     }
 });
