@@ -14,7 +14,7 @@
   <script type="module" src="/src/components/site-navbar.js"></script>
   <script type="module" src="/src/components/site-footer.js"></script>
 
-<!--  <script type="text/javascript" src="darkmode.js" defer></script>-->
+  <!--  <script type="text/javascript" src="darkmode.js" defer></script>-->
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="styles.css" rel="stylesheet"> <!-- This stops tailwind autocomplete from breaking on Finn's computer -->
@@ -62,7 +62,7 @@
 
         <div style="margin-left: 10em; margin-top: -5em;">Review:
           <span>★★★★★</span>
-          <div>Lorem ipsum is simply dummy text</div>
+          <div id="lorem">Lorem ipsum is simply dummy text</div>
         </div>
 
       </div>
@@ -124,6 +124,8 @@
     ar.addEventListener('click', () => {
       window.location.replace('addReview.html')
     })
+    const lorem = document.getElementById('lorem');
+    lorem.innerHTML = localStorage.getItem("review")
   </script>
 </body>
 

@@ -342,6 +342,18 @@ const preDefinedSuggestions = [
 
 ];
 
+const btn = document.getElementById('donebtn');
+
+btn.addEventListener('click', () => {
+    const inp = document.getElementById('inp').value
+    console.log(inp.value)
+    localStorage.setItem("review", inp)
+    window.location.replace('review_index.html')
+    if (inp == "") {
+        console.log("BAD!")
+    }
+})
+
 // Add event listener to input
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.toLowerCase();
