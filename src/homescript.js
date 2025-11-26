@@ -4,16 +4,19 @@
 import { db, auth } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
 import {
-    collection,
-    getDocs,
-    addDoc,
-    deleteDoc,
-    doc,
-    query,
-    where,
-    serverTimestamp,
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
 } from "firebase/firestore";
-
 
 const HEART_ICON_PATH = "/images/heart-svgrepo-com.svg";
 let currentUser = null;
@@ -68,42 +71,70 @@ const loadHeartIcon = async () => {
   }
 };
 
-// Check if item is saved and get document ID
-const getSavedItemId = async (type, data) => {
+// Map item type to user document field name
+const getFieldName = (type) => {
+  const fieldMap = {
+    place: "savedCountries",
+    restaurant: "savedRestaurants",
+    activity: "savedActivities",
+  };
+  return fieldMap[type] || null;
+};
+
+// Helper: Check if two items match based on type
+const itemsMatch = (type, item1, item2) => {
+  if (type === "place") {
+    return item1.country === item2.country && item1.city === item2.city;
+  }
+  return item1.name === item2.name;
+};
+
+// Helper: Get user document data
+const getUserData = async () => {
   if (!currentUser) return null;
   try {
-    const conditions = [
-      where("userId", "==", currentUser.uid),
-      where("type", "==", type),
-      where(
-        type === "place" ? "country" : "name",
-        "==",
-        data[type === "place" ? "country" : "name"]
-      ),
-    ];
-    if (type === "place") conditions.push(where("city", "==", data.city));
-
-    const q = query(collection(db, "savedItems"), ...conditions);
-    const snapshot = await getDocs(q);
-    return snapshot.empty ? null : snapshot.docs[0].id;
-  } catch {
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    return userDoc.exists() ? userDoc.data() : null;
+  } catch (error) {
+    console.error("Error getting user data:", error);
     return null;
   }
 };
 
-// Save/delete item
+// Check if item is saved
+const isItemSaved = async (type, data) => {
+  const userData = await getUserData();
+  if (!userData) return false;
+
+  const fieldName = getFieldName(type);
+  if (!fieldName) return false;
+
+  const savedArray = userData[fieldName] || [];
+  return savedArray.some((item) => itemsMatch(type, item, data));
+};
+
+// Save item to user document array
 const saveItem = async (type, data) => {
   if (!currentUser) {
     alert("Please log in to save items");
     return false;
   }
   try {
-    await addDoc(collection(db, "savedItems"), {
-      userId: currentUser.uid,
-      type,
+    const fieldName = getFieldName(type);
+    if (!fieldName) {
+      console.error("Invalid item type:", type);
+      return false;
+    }
+
+    const itemToSave = {
       ...data,
-      savedAt: serverTimestamp(),
+      savedAt: new Date().toISOString(),
+    };
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      [fieldName]: arrayUnion(itemToSave),
     });
+
     return true;
   } catch (error) {
     console.error("Error saving item:", error);
@@ -112,10 +143,26 @@ const saveItem = async (type, data) => {
   }
 };
 
-const deleteItem = async (docId) => {
-  if (!currentUser) return false;
+// Delete item from user document array
+const deleteItem = async (type, data) => {
+  const userData = await getUserData();
+  if (!userData) return false;
+
   try {
-    await deleteDoc(doc(db, "savedItems", docId));
+    const fieldName = getFieldName(type);
+    if (!fieldName) return false;
+
+    const savedArray = userData[fieldName] || [];
+    const itemToRemove = savedArray.find((item) =>
+      itemsMatch(type, item, data)
+    );
+
+    if (!itemToRemove) return false;
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      [fieldName]: arrayRemove(itemToRemove),
+    });
+
     return true;
   } catch (error) {
     console.error("Error deleting item:", error);
@@ -163,23 +210,23 @@ const createHeartButton = (label, type, data) => {
     }
   });
 
-  getSavedItemId(type, data).then((docId) => {
-    savedDocId = docId;
-    if (docId) updateHeartState(true);
+  // Check initial saved state
+  isItemSaved(type, data).then((saved) => {
+    if (saved) updateHeartState(true);
   });
 
   button.addEventListener("click", async () => {
-    const isSaved = button.getAttribute("aria-pressed") === "true";
-    if (!isSaved) {
+    const isCurrentlySaved = button.getAttribute("aria-pressed") === "true";
+    if (!isCurrentlySaved) {
+      // Save item
       const success = await saveItem(type, data);
       if (success) {
-        savedDocId = await getSavedItemId(type, data);
         updateHeartState(true);
       }
-    } else if (savedDocId) {
-      const success = await deleteItem(savedDocId);
+    } else {
+      // Delete item
+      const success = await deleteItem(type, data);
       if (success) {
-        savedDocId = null;
         updateHeartState(false);
       }
     }
