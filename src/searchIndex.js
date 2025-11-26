@@ -356,14 +356,14 @@ searchInput.addEventListener('input', () => {
         filteredResults.sort()  // make it alphabetical order
 
         filteredResults.forEach(result => {  // add to html
-            const suggestionItem = document.createElement('div'); suggestionItem.classList.add('autocomplete-suggestion');
-            const hist = document.getElementById('history-place');
+            const suggestionItem = document.createElement('div');
+            suggestionItem.classList.add('autocomplete-suggestion');
             suggestionItem.classList.add('p-2.5');
             suggestionItem.classList.add('cursor-pointer');
             suggestionItem.classList.add('hover:bg-[#e6d8c3]');
             suggestionItem.classList.add('border-t');
-            suggestionItem.classList.add('border-gray-400')
-            suggestionItem.classList.add('duration-100')
+            suggestionItem.classList.add('border-gray-400');
+            suggestionItem.classList.add('duration-100');
             suggestionItem.textContent = result;
             suggestionItem.addEventListener('click', () => {
                 if (localStorage["location_name"] === "Abbotsford") {
@@ -380,7 +380,6 @@ searchInput.addEventListener('input', () => {
                     localStorage["location_name"] = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
                     location.href = `../eachPlace.html`
                     console.log(localStorage["location_name"])
-                    hist.innerHTML = localStorage["location_name"]
                 }
             });
             suggestions.appendChild(suggestionItem);
