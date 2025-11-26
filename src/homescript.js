@@ -178,6 +178,9 @@ const createHeartButton = (label, type, data) => {
     "absolute top-3 right-3 rounded-full shadow-sm p-1.5 bg-white/90 hover:scale-105 transition-all";
   button.setAttribute("aria-label", label);
   button.setAttribute("aria-pressed", "false");
+  // Ensure entire button area is clickable
+  button.style.cursor = "pointer";
+  button.style.pointerEvents = "auto";
 
   let pathElement = null;
   let savedDocId = null;
@@ -235,16 +238,68 @@ const createHeartButton = (label, type, data) => {
   return button;
 };
 
+// Generate image URL for places using Picsum Photos (reliable placeholder service)
+// Using a hash of city+country to get consistent images per location
+const getPlaceImageUrl = (cityName, countryName) => {
+  // Create a simple hash from city and country name for consistent images
+  const locationString = `${cityName}${countryName}`;
+  let hash = 0;
+  for (let i = 0; i < locationString.length; i++) {
+    hash = locationString.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const imageId = Math.abs(hash) % 1000; // Use hash to get image ID between 0-999
+  // Use Picsum Photos which provides beautiful placeholder images
+  return `https://picsum.photos/seed/${imageId}/400/300`;
+};
+
 // Create card components
 const createCard = (type, data, heartData) => {
   const div = document.createElement("div");
-  div.className =
-    "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
 
-  div.appendChild(createHeartButton(`Save this ${type}`, type, heartData));
+  // For place cards only: add background image, otherwise keep grey background
+  if (type === "place") {
+    // Use imageUrl from Firestore if available and not empty, otherwise generate image URL
+    const imageUrl =
+      data.imageUrl && data.imageUrl.trim() !== ""
+        ? data.imageUrl
+        : getPlaceImageUrl(data.cityName, data.countryName);
+
+    div.className =
+      "relative rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
+    // Set background image with proper CSS - add fallback grey color
+    div.style.backgroundColor = "#d4d4d4"; // Fallback grey if image doesn't load
+    div.style.backgroundImage = `url("${imageUrl}")`;
+    div.style.backgroundSize = "cover";
+    div.style.backgroundPosition = "center";
+    div.style.backgroundRepeat = "no-repeat";
+    // Add subtle dark overlay to ensure text readability
+    const overlay = document.createElement("div");
+    overlay.className = "absolute inset-0 rounded-2xl";
+    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+    overlay.style.pointerEvents = "none";
+    overlay.style.zIndex = "1";
+    div.appendChild(overlay);
+  } else {
+    // Restaurants and activities: keep original grey background
+    div.className =
+      "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
+  }
+
+  // Create heart button and ensure it's above overlay for place cards
+  const heartButton = createHeartButton(`Save this ${type}`, type, heartData);
+  // Set z-index to ensure heart button is clickable above overlay
+  heartButton.style.zIndex = "20";
+  div.appendChild(heartButton);
 
   const content = document.createElement("div");
-  content.className = "flex h-full flex-col justify-end gap-1";
+  // For place cards with images, make text white and add shadow for visibility
+  if (type === "place") {
+    content.className =
+      "flex h-full flex-col justify-end gap-1 relative z-10 text-white";
+    content.style.textShadow = "0 1px 3px rgba(0,0,0,0.5)";
+  } else {
+    content.className = "flex h-full flex-col justify-end gap-1";
+  }
 
   if (type === "place") {
     content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
