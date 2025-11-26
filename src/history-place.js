@@ -23,16 +23,33 @@ async function getHistoryPlaces(userId) {
 
             try {
                 let eachPlace = document.createElement("div");
-                eachPlace.innerHTML = `
-                    <div class="historyPlace flex flex-row autocomplete-suggestion p-2.5 cursor-pointer hover:bg-[#e6d8c3] border-b border-gray-400 duration-100" onclick="location.href='../eachPlace.html'">
+                if (history_index === -1) {
+                    eachPlace.innerHTML = `
+                    <div class="historyPlace rounded-t-xl flex flex-row autocomplete-suggestion p-2.5 cursor-pointer hover:bg-[#e6d8c3] border-b border-gray-400 duration-100
+                     text-[#254430] bg-[#F5F3F1] text-xl max-h-min h-[52px] font-semibold">
                         <p class="historyPlaceName my-auto pl-2 text-xl">${historyArrayElement}</p>
-                    </div>
-                `
+                    </div>`
+                } else if (history_index === historyArray.length * -1) {
+                    eachPlace.innerHTML = `
+                    <div class="historyPlace rounded-b-xl flex flex-row autocomplete-suggestion p-2.5 cursor-pointer hover:bg-[#e6d8c3] duration-100
+                     text-[#254430] bg-[#F5F3F1] text-xl max-h-min h-[52px] font-semibold">
+                        <p class="historyPlaceName my-auto pl-2 text-xl">${historyArrayElement}</p>
+                    </div>`
+                } else {
+                    eachPlace.innerHTML = `
+                    <div class="historyPlace flex flex-row autocomplete-suggestion p-2.5 cursor-pointer hover:bg-[#e6d8c3] border-b border-gray-400 duration-100
+                     text-[#254430] bg-[#F5F3F1] text-xl max-h-min h-[52px] font-semibold">
+                        <p class="historyPlaceName my-auto pl-2 text-xl">${historyArrayElement}</p>
+                    </div>`
+                }
                 eachPlace.addEventListener('click', () => {
                     localStorage["location_name"] = historyArrayElement
+                    location.href = `../eachPlace.html`
                 })
                 historyDiv.appendChild(eachPlace)
                 console.log("place added")
+
+
             }
             catch (error) {
                 console.log(error)
