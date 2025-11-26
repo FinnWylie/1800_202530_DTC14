@@ -366,27 +366,56 @@ searchInput.addEventListener('input', () => {
             suggestionItem.classList.add('duration-100');
             suggestionItem.textContent = result;
             suggestionItem.addEventListener('click', () => {
-                if (localStorage["location_name"] === "Abbotsford") {
-                    localStorage.setItem("location_name", 'Abbotsford, _British_Columbia')
-                    location.href = `../eachPlace.html`
+                let reviewLocation = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
+                console.log(reviewLocation)
 
-                }
-                if (localStorage["location_name"] === "Salvador") {
-                    localStorage.setItem("location_name", 'Salvador,_Bahia')
-                    location.href = `../eachPlace.html`
 
-                }
-                else {
-                    localStorage["location_name"] = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
-                    location.href = `../eachPlace.html`
-                    console.log(localStorage["location_name"])
-                }
+
+                // add the place to the review selection
+                const chosenDiv = document.getElementById('chosen-place')
+                chosenDiv.innerHTML = `
+                    <h1>Location review is for</h1>
+                    <div class="flex flex-col border-2 border-[#5d866c] rounded-xl bg-[#F5F3f1] text-lg max-h-min ">
+                        <div id="chosen-place-inner" class="flex flex-row justify-between">
+                            <div class="chosenPlace flex flex-row autocomplete-suggestion p-2.5 rounded-xl text-[#254430] bg-[#F5F3F1] text-xl max-h-min h-[52px] font-semibold">
+                                <p class="chosenPlaceName my-auto pl-2 text-xl">${reviewLocation}</p>
+                            </div>
+                            <svg class="pr-2" id='closeBtn'
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="48"
+                              height="48"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="#000000"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            >
+                              <path d="M18 6l-12 12" />
+                              <path d="M6 6l12 12" />
+                            </svg>
+
+                        </div>
+                    </div>`
+                localStorage["review_location"] = reviewLocation  // add the location to the browser's memory to use with firestore later
+
+                // add event listener to x button
+                // will remove the location from the div and memory
+                document.getElementById('closeBtn').addEventListener('click', () => {
+                    document.getElementById('chosen-place').innerHTML = ''
+                    localStorage["review_location"] = ''
+                })
+
             });
             suggestions.appendChild(suggestionItem);
         });
         document.getElementById("suggestions").lastElementChild.classList.add('rounded-b-lg');  // ensure the last one is rounded like the container
     }
 });
+
+
+
+
 
 // Hide suggestions when clicking outside
 document.addEventListener('click', function (event) {

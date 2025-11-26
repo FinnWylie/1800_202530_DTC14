@@ -1,5 +1,5 @@
 import { auth, db } from "./firebaseConfig.js";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import {doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 // ============================================
@@ -64,6 +64,17 @@ async function loadWikipediaPage() {
 async function addHistoryPlace(userId, placeName) {
     const userRef = doc(db, "users", userId);
 
+    // remove any instances of the place that are older
+    try {
+        await updateDoc(userRef, {
+            history: arrayRemove(placeName)
+        });
+        console.log(`${placeName} removed`);
+    } catch (error) {
+        console.log("error removing place:", error)
+    }
+
+    // add the new place instance
     try {
         await updateDoc(userRef, {
             history: arrayUnion(placeName)

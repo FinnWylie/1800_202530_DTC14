@@ -4,16 +4,19 @@
 import { db, auth } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
 import {
-    collection,
-    getDocs,
-    addDoc,
-    deleteDoc,
-    doc,
-    query,
-    where,
-    serverTimestamp,
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  serverTimestamp,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
 } from "firebase/firestore";
-
 
 const HEART_ICON_PATH = "/images/heart-svgrepo-com.svg";
 let currentUser = null;
@@ -68,42 +71,70 @@ const loadHeartIcon = async () => {
   }
 };
 
-// Check if item is saved and get document ID
-const getSavedItemId = async (type, data) => {
+// Map item type to user document field name
+const getFieldName = (type) => {
+  const fieldMap = {
+    place: "savedCountries",
+    restaurant: "savedRestaurants",
+    activity: "savedActivities",
+  };
+  return fieldMap[type] || null;
+};
+
+// Helper: Check if two items match based on type
+const itemsMatch = (type, item1, item2) => {
+  if (type === "place") {
+    return item1.country === item2.country && item1.city === item2.city;
+  }
+  return item1.name === item2.name;
+};
+
+// Helper: Get user document data
+const getUserData = async () => {
   if (!currentUser) return null;
   try {
-    const conditions = [
-      where("userId", "==", currentUser.uid),
-      where("type", "==", type),
-      where(
-        type === "place" ? "country" : "name",
-        "==",
-        data[type === "place" ? "country" : "name"]
-      ),
-    ];
-    if (type === "place") conditions.push(where("city", "==", data.city));
-
-    const q = query(collection(db, "savedItems"), ...conditions);
-    const snapshot = await getDocs(q);
-    return snapshot.empty ? null : snapshot.docs[0].id;
-  } catch {
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    return userDoc.exists() ? userDoc.data() : null;
+  } catch (error) {
+    console.error("Error getting user data:", error);
     return null;
   }
 };
 
-// Save/delete item
+// Check if item is saved
+const isItemSaved = async (type, data) => {
+  const userData = await getUserData();
+  if (!userData) return false;
+
+  const fieldName = getFieldName(type);
+  if (!fieldName) return false;
+
+  const savedArray = userData[fieldName] || [];
+  return savedArray.some((item) => itemsMatch(type, item, data));
+};
+
+// Save item to user document array
 const saveItem = async (type, data) => {
   if (!currentUser) {
     alert("Please log in to save items");
     return false;
   }
   try {
-    await addDoc(collection(db, "savedItems"), {
-      userId: currentUser.uid,
-      type,
+    const fieldName = getFieldName(type);
+    if (!fieldName) {
+      console.error("Invalid item type:", type);
+      return false;
+    }
+
+    const itemToSave = {
       ...data,
-      savedAt: serverTimestamp(),
+      savedAt: new Date().toISOString(),
+    };
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      [fieldName]: arrayUnion(itemToSave),
     });
+
     return true;
   } catch (error) {
     console.error("Error saving item:", error);
@@ -112,10 +143,26 @@ const saveItem = async (type, data) => {
   }
 };
 
-const deleteItem = async (docId) => {
-  if (!currentUser) return false;
+// Delete item from user document array
+const deleteItem = async (type, data) => {
+  const userData = await getUserData();
+  if (!userData) return false;
+
   try {
-    await deleteDoc(doc(db, "savedItems", docId));
+    const fieldName = getFieldName(type);
+    if (!fieldName) return false;
+
+    const savedArray = userData[fieldName] || [];
+    const itemToRemove = savedArray.find((item) =>
+      itemsMatch(type, item, data)
+    );
+
+    if (!itemToRemove) return false;
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      [fieldName]: arrayRemove(itemToRemove),
+    });
+
     return true;
   } catch (error) {
     console.error("Error deleting item:", error);
@@ -131,6 +178,9 @@ const createHeartButton = (label, type, data) => {
     "absolute top-3 right-3 rounded-full shadow-sm p-1.5 bg-white/90 hover:scale-105 transition-all";
   button.setAttribute("aria-label", label);
   button.setAttribute("aria-pressed", "false");
+  // Ensure entire button area is clickable
+  button.style.cursor = "pointer";
+  button.style.pointerEvents = "auto";
 
   let pathElement = null;
   let savedDocId = null;
@@ -163,23 +213,23 @@ const createHeartButton = (label, type, data) => {
     }
   });
 
-  getSavedItemId(type, data).then((docId) => {
-    savedDocId = docId;
-    if (docId) updateHeartState(true);
+  // Check initial saved state
+  isItemSaved(type, data).then((saved) => {
+    if (saved) updateHeartState(true);
   });
 
   button.addEventListener("click", async () => {
-    const isSaved = button.getAttribute("aria-pressed") === "true";
-    if (!isSaved) {
+    const isCurrentlySaved = button.getAttribute("aria-pressed") === "true";
+    if (!isCurrentlySaved) {
+      // Save item
       const success = await saveItem(type, data);
       if (success) {
-        savedDocId = await getSavedItemId(type, data);
         updateHeartState(true);
       }
-    } else if (savedDocId) {
-      const success = await deleteItem(savedDocId);
+    } else {
+      // Delete item
+      const success = await deleteItem(type, data);
       if (success) {
-        savedDocId = null;
         updateHeartState(false);
       }
     }
@@ -188,16 +238,68 @@ const createHeartButton = (label, type, data) => {
   return button;
 };
 
+// Generate image URL for places using Picsum Photos (reliable placeholder service)
+// Using a hash of city+country to get consistent images per location
+const getPlaceImageUrl = (cityName, countryName) => {
+  // Create a simple hash from city and country name for consistent images
+  const locationString = `${cityName}${countryName}`;
+  let hash = 0;
+  for (let i = 0; i < locationString.length; i++) {
+    hash = locationString.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const imageId = Math.abs(hash) % 1000; // Use hash to get image ID between 0-999
+  // Use Picsum Photos which provides beautiful placeholder images
+  return `https://picsum.photos/seed/${imageId}/400/300`;
+};
+
 // Create card components
 const createCard = (type, data, heartData) => {
   const div = document.createElement("div");
-  div.className =
-    "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
 
-  div.appendChild(createHeartButton(`Save this ${type}`, type, heartData));
+  // For place cards only: add background image, otherwise keep grey background
+  if (type === "place") {
+    // Use imageUrl from Firestore if available and not empty, otherwise generate image URL
+    const imageUrl =
+      data.imageUrl && data.imageUrl.trim() !== ""
+        ? data.imageUrl
+        : getPlaceImageUrl(data.cityName, data.countryName);
+
+    div.className =
+      "relative rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
+    // Set background image with proper CSS - add fallback grey color
+    div.style.backgroundColor = "#d4d4d4"; // Fallback grey if image doesn't load
+    div.style.backgroundImage = `url("${imageUrl}")`;
+    div.style.backgroundSize = "cover";
+    div.style.backgroundPosition = "center";
+    div.style.backgroundRepeat = "no-repeat";
+    // Add subtle dark overlay to ensure text readability
+    const overlay = document.createElement("div");
+    overlay.className = "absolute inset-0 rounded-2xl";
+    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+    overlay.style.pointerEvents = "none";
+    overlay.style.zIndex = "1";
+    div.appendChild(overlay);
+  } else {
+    // Restaurants and activities: keep original grey background
+    div.className =
+      "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
+  }
+
+  // Create heart button and ensure it's above overlay for place cards
+  const heartButton = createHeartButton(`Save this ${type}`, type, heartData);
+  // Set z-index to ensure heart button is clickable above overlay
+  heartButton.style.zIndex = "20";
+  div.appendChild(heartButton);
 
   const content = document.createElement("div");
-  content.className = "flex h-full flex-col justify-end gap-1";
+  // For place cards with images, make text white and add shadow for visibility
+  if (type === "place") {
+    content.className =
+      "flex h-full flex-col justify-end gap-1 relative z-10 text-white";
+    content.style.textShadow = "0 1px 3px rgba(0,0,0,0.5)";
+  } else {
+    content.className = "flex h-full flex-col justify-end gap-1";
+  }
 
   if (type === "place") {
     content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
