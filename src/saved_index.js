@@ -4,16 +4,7 @@
 
 import { db } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
-import {
-    collection,
-    getDocs,
-    deleteDoc,
-    doc,
-    query,
-    where,
-    orderBy,
-} from "firebase/firestore";
-
+import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 
 let currentUser = null;
 
@@ -27,42 +18,87 @@ onAuthReady((user) => {
   }
 });
 
-// Load saved items
+// Map item type to user document field name
+const getFieldName = (type) => {
+  const fieldMap = {
+    place: "savedCountries",
+    restaurant: "savedRestaurants",
+    activity: "savedActivities",
+  };
+  return fieldMap[type] || null;
+};
+
+// Helper: Check if two items match based on type
+const itemsMatch = (type, item1, item2) => {
+  if (type === "place") {
+    return item1.country === item2.country && item1.city === item2.city;
+  }
+  return item1.name === item2.name;
+};
+
+// Load saved items from user document
 const loadSavedItems = async () => {
   if (!currentUser) return;
 
   try {
-    const q = query(
-      collection(db, "savedItems"),
-      where("userId", "==", currentUser.uid),
-      orderBy("savedAt", "desc")
-    );
-    const snapshot = await getDocs(q);
-    const items = [];
-    snapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    if (!userDoc.exists()) {
+      displayEmptyState();
+      return;
+    }
+
+    const userData = userDoc.data();
+    const items = [
+      ...(userData.savedCountries || []).map((item) => ({
+        ...item,
+        type: "place",
+      })),
+      ...(userData.savedRestaurants || []).map((item) => ({
+        ...item,
+        type: "restaurant",
+      })),
+      ...(userData.savedActivities || []).map((item) => ({
+        ...item,
+        type: "activity",
+      })),
+    ];
+
+    // Sort by savedAt timestamp (most recent first)
+    items.sort((a, b) => {
+      const timeA = a.savedAt ? new Date(a.savedAt).getTime() : 0;
+      const timeB = b.savedAt ? new Date(b.savedAt).getTime() : 0;
+      return timeB - timeA;
+    });
+
     displaySavedItems(items);
   } catch (error) {
-    // If orderBy fails, try without it
-    try {
-      const q = query(
-        collection(db, "savedItems"),
-        where("userId", "==", currentUser.uid)
-      );
-      const snapshot = await getDocs(q);
-      const items = [];
-      snapshot.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
-      displaySavedItems(items);
-    } catch {
-      displayEmptyState();
-    }
+    console.error("Error loading saved items:", error);
+    displayEmptyState();
   }
 };
 
-// Delete item
-const deleteSavedItem = async (itemId) => {
+// Delete item from user document array
+const deleteSavedItem = async (item) => {
   if (!currentUser) return false;
   try {
-    await deleteDoc(doc(db, "savedItems", itemId));
+    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+    if (!userDoc.exists()) return false;
+
+    const userData = userDoc.data();
+    const fieldName = getFieldName(item.type);
+    if (!fieldName) return false;
+
+    const savedArray = userData[fieldName] || [];
+    const itemToRemove = savedArray.find((saved) =>
+      itemsMatch(item.type, saved, item)
+    );
+
+    if (!itemToRemove) return false;
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      [fieldName]: arrayRemove(itemToRemove),
+    });
+
     return true;
   } catch (error) {
     console.error("Error deleting item:", error);
@@ -108,7 +144,7 @@ const createSavedItemCard = (item) => {
     if (
       confirm("Are you sure you want to remove this item from your saved list?")
     ) {
-      const success = await deleteSavedItem(item.id);
+      const success = await deleteSavedItem(item);
       if (success) {
         card.remove();
         // Check if list is now empty
