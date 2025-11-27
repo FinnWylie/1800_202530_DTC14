@@ -238,18 +238,39 @@ const createHeartButton = (label, type, data) => {
   return button;
 };
 
-// Generate image URL for places using Picsum Photos (reliable placeholder service)
-// Using a hash of city+country to get consistent images per location
-const getPlaceImageUrl = (cityName, countryName) => {
-  // Create a simple hash from city and country name for consistent images
-  const locationString = `${cityName}${countryName}`;
-  let hash = 0;
-  for (let i = 0; i < locationString.length; i++) {
-    hash = locationString.charCodeAt(i) + ((hash << 5) - hash);
+// Helper function to fetch Wikipedia image for a given search query
+const fetchWikipediaImage = async (searchQuery) => {
+  try {
+    const response = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&titles=${encodeURIComponent(
+        searchQuery
+      )}&piprop=original`
+    );
+    const pages = (await response.json()).query?.pages;
+    const page = pages?.[Object.keys(pages)[0]];
+    return page && Object.keys(pages)[0] !== "-1" && page.original?.source
+      ? page.original.source
+      : null;
+  } catch {
+    return null;
   }
-  const imageId = Math.abs(hash) % 1000; // Use hash to get image ID between 0-999
-  // Use Picsum Photos which provides beautiful placeholder images
-  return `https://picsum.photos/seed/${imageId}/400/300`;
+};
+
+// Generate image URL for places using Wikipedia API with multiple fallback strategies
+const getPlaceImageUrl = async (cityName, countryName) => {
+  const searchQueries = [
+    `${cityName}, ${countryName}`,
+    cityName,
+    `${cityName} ${countryName}`,
+    `Flag of ${countryName}`,
+    `${countryName} flag`,
+  ];
+
+  for (const query of searchQueries) {
+    const imageUrl = await fetchWikipediaImage(query);
+    if (imageUrl) return imageUrl;
+  }
+  return null;
 };
 
 // Create card components
@@ -258,27 +279,52 @@ const createCard = (type, data, heartData) => {
 
   // For place cards only: add background image, otherwise keep grey background
   if (type === "place") {
-    // Use imageUrl from Firestore if available and not empty, otherwise generate image URL
-    const imageUrl =
-      data.imageUrl && data.imageUrl.trim() !== ""
-        ? data.imageUrl
-        : getPlaceImageUrl(data.cityName, data.countryName);
-
     div.className =
       "relative rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
-    // Set background image with proper CSS - add fallback grey color
-    div.style.backgroundColor = "#d4d4d4"; // Fallback grey if image doesn't load
-    div.style.backgroundImage = `url("${imageUrl}")`;
-    div.style.backgroundSize = "cover";
-    div.style.backgroundPosition = "center";
-    div.style.backgroundRepeat = "no-repeat";
-    // Add subtle dark overlay to ensure text readability
+    // Set fallback grey color while image loads
+    div.style.backgroundColor = "#d4d4d4";
+
+    // Create overlay element (hidden by default, shown only if image loads)
     const overlay = document.createElement("div");
     overlay.className = "absolute inset-0 rounded-2xl";
     overlay.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
     overlay.style.pointerEvents = "none";
     overlay.style.zIndex = "1";
+    overlay.style.display = "none"; // Hidden by default
     div.appendChild(overlay);
+
+    // Create content element first so we can reference it in async function
+    const content = document.createElement("div");
+    content.className = "flex h-full flex-col justify-end gap-1 relative z-10";
+    content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
+    div.appendChild(content);
+
+    // Load image asynchronously
+    (async () => {
+      let imageUrl;
+      if (data.imageUrl && data.imageUrl.trim() !== "") {
+        // Use imageUrl from Firestore if available
+        imageUrl = data.imageUrl;
+      } else {
+        // Fetch city image from Wikipedia API with multiple fallback strategies
+        imageUrl = await getPlaceImageUrl(data.cityName, data.countryName);
+      }
+
+      // Only set background image if we found one
+      if (imageUrl) {
+        Object.assign(div.style, {
+          backgroundImage: `url("${imageUrl}")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        });
+        overlay.style.display = "block";
+        Object.assign(content.style, {
+          color: "white",
+          textShadow: "0 1px 3px rgba(0,0,0,0.5)",
+        });
+      }
+    })();
   } else {
     // Restaurants and activities: keep original grey background
     div.className =
@@ -291,27 +337,22 @@ const createCard = (type, data, heartData) => {
   heartButton.style.zIndex = "20";
   div.appendChild(heartButton);
 
-  const content = document.createElement("div");
-  // For place cards with images, make text white and add shadow for visibility
-  if (type === "place") {
-    content.className =
-      "flex h-full flex-col justify-end gap-1 relative z-10 text-white";
-    content.style.textShadow = "0 1px 3px rgba(0,0,0,0.5)";
-  } else {
+  // Create content element for non-place cards
+  if (type !== "place") {
+    const content = document.createElement("div");
     content.className = "flex h-full flex-col justify-end gap-1";
+
+    if (type === "restaurant") {
+      content.innerHTML = `<p>${data.name}</p><p>${generateStars(
+        data.rating
+      )}</p>`;
+    } else {
+      content.innerHTML = `<p>${data.name}</p>`;
+    }
+
+    div.appendChild(content);
   }
 
-  if (type === "place") {
-    content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
-  } else if (type === "restaurant") {
-    content.innerHTML = `<p>${data.name}</p><p>${generateStars(
-      data.rating
-    )}</p>`;
-  } else {
-    content.innerHTML = `<p>${data.name}</p>`;
-  }
-
-  div.appendChild(content);
   return div;
 };
 
