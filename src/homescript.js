@@ -258,22 +258,18 @@ const fetchWikipediaImage = async (searchQuery) => {
 
 // Generate image URL for places using Wikipedia API with multiple fallback strategies
 const getPlaceImageUrl = async (cityName, countryName) => {
-  const searchQueries = [
-    // Try city-specific images first
+  const queries = [
     `${cityName}, ${countryName}`,
     cityName,
     `${cityName} ${countryName}`,
-    // Then try country page itself (usually has flag image)
     countryName,
-    // Try flag variations - many countries need "the" (e.g., "Flag of the United States")
     `Flag of the ${countryName}`,
     `Flag of ${countryName}`,
     `${countryName} flag`,
   ];
-
-  for (const query of searchQueries) {
-    const imageUrl = await fetchWikipediaImage(query);
-    if (imageUrl) return imageUrl;
+  for (const query of queries) {
+    const url = await fetchWikipediaImage(query);
+    if (url) return url;
   }
   return null;
 };
@@ -285,17 +281,18 @@ const createCard = (type, data, heartData) => {
   // For place cards only: add background image, otherwise keep grey background
   if (type === "place") {
     div.className =
-      "relative rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
+      "relative rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden cursor-pointer";
     // Set fallback grey color while image loads
     div.style.backgroundColor = "#d4d4d4";
 
-    // Create overlay element (hidden by default, shown only if image loads)
     const overlay = document.createElement("div");
     overlay.className = "absolute inset-0 rounded-2xl";
-    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-    overlay.style.pointerEvents = "none";
-    overlay.style.zIndex = "1";
-    overlay.style.display = "none"; // Hidden by default
+    Object.assign(overlay.style, {
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
+      pointerEvents: "none",
+      zIndex: "1",
+      display: "none",
+    });
     div.appendChild(overlay);
 
     // Create content element first so we can reference it in async function
@@ -304,18 +301,20 @@ const createCard = (type, data, heartData) => {
     content.innerHTML = `<h1 class="font-bold">${data.countryName}</h1><h1>${data.cityName}</h1>`;
     div.appendChild(content);
 
+    // Make card clickable to navigate to eachPlace page
+    div.addEventListener("click", (e) => {
+      // Don't navigate if clicking on the heart button
+      if (e.target.closest("button")) return;
+      // Store only city name (same format as search functionality)
+      localStorage.setItem("location_name", data.cityName);
+      window.location.href = "eachPlace.html";
+    });
+
     // Load image asynchronously
     (async () => {
-      let imageUrl;
-      if (data.imageUrl && data.imageUrl.trim() !== "") {
-        // Use imageUrl from Firestore if available
-        imageUrl = data.imageUrl;
-      } else {
-        // Fetch city image from Wikipedia API with multiple fallback strategies
-        imageUrl = await getPlaceImageUrl(data.cityName, data.countryName);
-      }
-
-      // Only set background image if we found one
+      const imageUrl =
+        data.imageUrl?.trim() ||
+        (await getPlaceImageUrl(data.cityName, data.countryName));
       if (imageUrl) {
         Object.assign(div.style, {
           backgroundImage: `url("${imageUrl}")`,
@@ -336,25 +335,17 @@ const createCard = (type, data, heartData) => {
       "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
   }
 
-  // Create heart button and ensure it's above overlay for place cards
   const heartButton = createHeartButton(`Save this ${type}`, type, heartData);
-  // Set z-index to ensure heart button is clickable above overlay
   heartButton.style.zIndex = "20";
   div.appendChild(heartButton);
 
-  // Create content element for non-place cards
   if (type !== "place") {
     const content = document.createElement("div");
     content.className = "flex h-full flex-col justify-end gap-1";
-
-    if (type === "restaurant") {
-      content.innerHTML = `<p>${data.name}</p><p>${generateStars(
-        data.rating
-      )}</p>`;
-    } else {
-      content.innerHTML = `<p>${data.name}</p>`;
-    }
-
+    content.innerHTML =
+      type === "restaurant"
+        ? `<p>${data.name}</p><p>${generateStars(data.rating)}</p>`
+        : `<p>${data.name}</p>`;
     div.appendChild(content);
   }
 
