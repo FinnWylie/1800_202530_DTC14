@@ -259,9 +259,14 @@ const fetchWikipediaImage = async (searchQuery) => {
 // Generate image URL for places using Wikipedia API with multiple fallback strategies
 const getPlaceImageUrl = async (cityName, countryName) => {
   const searchQueries = [
+    // Try city-specific images first
     `${cityName}, ${countryName}`,
     cityName,
     `${cityName} ${countryName}`,
+    // Then try country page itself (usually has flag image)
+    countryName,
+    // Try flag variations - many countries need "the" (e.g., "Flag of the United States")
+    `Flag of the ${countryName}`,
     `Flag of ${countryName}`,
     `${countryName} flag`,
   ];
@@ -357,7 +362,11 @@ const createCard = (type, data, heartData) => {
 };
 
 // Fetch places from countries subcollections
+// Uses hardcoded country list for reliability and performance
 const fetchPlaces = async (count = 6) => {
+  // Hardcoded list of countries that exist in the database
+  // To add/remove countries: update this list and ensure they exist in Firestore at countries/{countryId}/cities
+  // Expanded list based on searchIndex.js suggestions for more variety on homepage
   const knownCountries = [
     "Argentina",
     "Australia",
@@ -378,6 +387,36 @@ const fetchPlaces = async (count = 6) => {
     "Hungary",
     "India",
     "Indonesia",
+    "Ireland",
+    "Italy",
+    "Japan",
+    "Kenya",
+    "Malaysia",
+    "Mexico",
+    "Morocco",
+    "Netherlands",
+    "New_Zealand",
+    "Norway",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Romania",
+    "Russia",
+    "Singapore",
+    "South_Africa",
+    "South_Korea",
+    "Spain",
+    "Sweden",
+    "Switzerland",
+    "Thailand",
+    "Turkey",
+    "Tuvalu",
+    "United_Kingdom",
+    "United_States",
+    "Vietnam",
+    "Maldives",
+    "Honduras",
   ];
 
   const allPlaces = [];
