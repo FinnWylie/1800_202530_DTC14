@@ -481,7 +481,7 @@ doneBtn.addEventListener("click", async (e) => {
     }
 
     const text = (inp?.value || "").trim();
-    const place = (searchInput?.value || "").trim();
+    const place = localStorage.getItem(["review_location"])
 
     if (!text) {
         showMessage("Please write a review before submitting.", true);
@@ -499,8 +499,9 @@ doneBtn.addEventListener("click", async (e) => {
         text,
         imageUrl,
         userId: currentUser.uid,
-        place: place || null,
+        // place: place || null,
         createdAt: serverTimestamp(),
+        country: place || null
     };
 
     try {
