@@ -344,21 +344,23 @@ const preDefinedSuggestions = [
 
 ];
 
-// const btn = document.getElementById('donebtn');
 
-// btn.addEventListener('click', () => {
-//     const inp = document.getElementById('inp').value
-//     if (inp == "") {
-//         console.log("BAD!")
+async function fetchWikipediaImage(title) {
+    const response = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages&titles=${encodeURIComponent(title)}&exintro=1&explaintext=1&piprop=original`
+    );
 
-//     }
-//     else {
+    const data = await response.json();
+    const pages = data.query.pages;
+    const pageId = Object.keys(pages)[0];
 
-//         console.log(inp.value)
-//         localStorage.setItem("review", inp)
-//         window.location.replace('review_index.html')
-//     }
-// })
+    if (pageId === "-1") {
+        return null;
+    }
+
+    const page = pages[pageId];
+    return page.original?.source || null;
+}
 
 // Add event listener to input
 searchInput.addEventListener('input', () => {
@@ -492,14 +494,19 @@ doneBtn.addEventListener("click", async (e) => {
         return
     }
 
-    // If you don't have images yet, keep imageUrl empty string
-    const imageUrl = ""; // default; replace later if you add upload
+
+    let wikiImageUrl = "";
+    try {
+        wikiImageUrl = await fetchWikipediaImage(place);
+    } catch (e) {
+        console.warn("Wikipedia image fetch failed:", e);
+        wikiImageUrl = "";
+    }
 
     const payload = {
         text,
-        imageUrl,
+        imageUrl: wikiImageUrl || "",
         userId: currentUser.uid,
-        // place: place || null,
         createdAt: serverTimestamp(),
         country: place || null
     };

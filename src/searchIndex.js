@@ -367,7 +367,7 @@ searchInput.addEventListener('input', () => {
             suggestionItem.textContent = result;
             suggestionItem.addEventListener('click', () => {
                 if (localStorage["location_name"] === "Abbotsford") {
-                    localStorage.setItem("location_name", 'Abbotsford, _British_Columbia')
+                    localStorage.setItem("location_name", 'Abbotsford,_British_Columbia')
                     location.href = `../eachPlace.html`
 
                 }

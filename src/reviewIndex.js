@@ -23,7 +23,7 @@ const displayEmptyState = () => {
     container.innerHTML = `
     <div class="text-center py-12">
       <p class="text-gray-600 text-lg mb-4">You haven't left a review yet!</p>
-      <p class="text-gray-500">Start by adding reviews by clicking the big green "Add Review" button</p>
+      <p class="text-gray-500">Start by clicking the big green "Add Review" button</p>
     </div>
   `;
 };
@@ -121,15 +121,18 @@ const createSavedItemCard = (item) => {
     imageDiv.className =
         "bg-white w-36 h-24 flex items-center justify-center overflow-hidden rounded";
 
-    if (item.imageUrl) {
-        const img = document.createElement("img");
-        img.src = item.imageUrl;
-        img.alt = "Review image";
-        img.className = "w-full h-full object-cover";
-        imageDiv.appendChild(img);
-    } else {
-        imageDiv.innerHTML = '<p class="text-gray-400">No Image</p>';
-    }
+    const img = document.createElement("img");
+    img.className = "w-full h-full object-cover";
+
+    // If no valid imageURL exists, use a nice fallback image
+    img.src = item.imageUrl && item.imageUrl.startsWith("http")
+        ? item.imageUrl
+        : "/assets/default-review.jpg"; // <-- add any image you want
+
+    img.alt = "Review image";
+
+    imageDiv.appendChild(img);
+
 
     // CONTENT
     const content = document.createElement("div");
