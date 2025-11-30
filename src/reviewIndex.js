@@ -154,12 +154,12 @@ const createSavedItemCard = (item) => {
     card.addEventListener("click", () => {
         // Update localStorage with this card's location
         localStorage.setItem(
-            "review_location",
+            "location_name",
             item.type === "review" ? item.country : item.city || item.country
         );
 
         // Navigate to review page
-        window.location.href = "../reviewPlace.html";
+        window.location.href = "../eachPlace.html";
     });
     if (item.type === "place") {
         content.innerHTML = `
