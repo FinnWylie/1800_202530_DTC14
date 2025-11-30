@@ -8,7 +8,7 @@ import {
     deleteDoc,
     doc as docRef
 } from "firebase/firestore";
-
+let testvar = false
 const addReviewBtn = document.getElementById("areview");
 if (addReviewBtn) {
     addReviewBtn.addEventListener("click", () => {
@@ -87,8 +87,16 @@ async function deleteSavedItem(item) {
     }
 }
 async function test() {
-    localStorage.getItem(["review_location"])
-    location.href = `../reviewPlace.html`
+    testvar = true
+    // card.addEventListener("click", () => {
+    //     if (testvar) {
+    //         localStorage.setItem(
+    //             "review_location",
+    //             item.type === "review" ? item.country : item.city || item.country
+    //         );
+    //     }
+    //     window.location.href = "../reviewPlace.html";
+    // });
 }
 
 const createSavedItemCard = (item) => {
@@ -109,9 +117,9 @@ const createSavedItemCard = (item) => {
     deleteBtn.addEventListener("click", async () => {
         if (confirm("Are you sure you want to delete this review?")) {
             const success = await deleteSavedItem(item);
-
-            if (success) {
-
+            const idk = await test()
+            if (success && idk) {
+                testvar = false
                 card.remove();
                 const container = document.getElementById("container");
                 if (container && container.children.length === 0) {
@@ -119,16 +127,7 @@ const createSavedItemCard = (item) => {
                 }
             } else {
                 alert("Couldn't delete the review. Check console for errors.");
-                card.addEventListener("click", () => {
-                    // Update localStorage with this card's location
-                    localStorage.setItem(
-                        "review_location",
-                        item.type === "review" ? item.country : item.city || item.country
-                    );
 
-                    // Navigate to review page
-                    window.location.href = "../reviewPlace.html";
-                });
             }
         }
     });
