@@ -7,10 +7,7 @@ import {
   collection,
   getDocs,
   addDoc,
-  deleteDoc,
   doc,
-  query,
-  where,
   serverTimestamp,
   updateDoc,
   arrayUnion,
@@ -183,7 +180,6 @@ const createHeartButton = (label, type, data) => {
   button.style.pointerEvents = "auto";
 
   let pathElement = null;
-  let savedDocId = null;
 
   const updateHeartState = (saved) => {
     button.setAttribute("aria-pressed", saved);
@@ -254,6 +250,176 @@ const fetchWikipediaImage = async (searchQuery) => {
   } catch {
     return null;
   }
+};
+
+// Search Wikipedia for pages matching a query
+const searchWikipedia = async (query, limit = 10) => {
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=search&srsearch=${encodeURIComponent(
+      query
+    )}&srlimit=${limit}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.query?.search) {
+      return data.query.search.map((item) => item.title);
+    }
+    return [];
+  } catch (error) {
+    console.error("Wikipedia search error:", error);
+    return [];
+  }
+};
+
+// Get page content and image from Wikipedia
+const getWikipediaPage = async (pageTitle) => {
+  try {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageimages&titles=${encodeURIComponent(
+      pageTitle
+    )}&exintro=1&explaintext=1&piprop=original`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const pages = data.query?.pages;
+    if (!pages) return null;
+
+    const pageId = Object.keys(pages)[0];
+    if (pageId === "-1") return null;
+
+    const page = pages[pageId];
+    return {
+      title: page.title,
+      extract: page.extract || "",
+      imageUrl: page.original?.source || null,
+    };
+  } catch (error) {
+    console.error("Wikipedia page error:", error);
+    return null;
+  }
+};
+
+// Get restaurants for a city using Wikipedia
+const getRestaurantsFromWikipedia = async (
+  cityName,
+  countryName,
+  count = 6
+) => {
+  const queries = [
+    `restaurant ${cityName}`,
+    `restaurants ${cityName} ${countryName}`,
+    `famous restaurant ${cityName}`,
+  ];
+
+  const allResults = [];
+
+  for (const query of queries) {
+    const titles = await searchWikipedia(query, 15);
+
+    for (const title of titles) {
+      // Skip list pages, categories, and pages that are not actual restaurant names
+      const titleLower = title.toLowerCase();
+      if (
+        titleLower.includes("list of") ||
+        titleLower.includes("category:") ||
+        titleLower.includes("restaurants in") ||
+        titleLower.includes("dining in") ||
+        titleLower.startsWith("category")
+      ) {
+        continue;
+      }
+
+      // Only include pages that look like actual restaurant names
+      // Restaurant names are usually short and don't contain "in" or "of"
+      if (
+        title.length < 50 &&
+        !titleLower.includes(" in ") &&
+        !titleLower.includes(" of ") &&
+        (titleLower.includes("restaurant") ||
+          titleLower.includes("cafe") ||
+          titleLower.includes("bistro") ||
+          titleLower.includes("bar") ||
+          titleLower.includes("grill"))
+      ) {
+        const page = await getWikipediaPage(title);
+        if (page && !allResults.find((r) => r.name === page.title)) {
+          allResults.push({
+            name: page.title,
+            rating: 4.0 + Math.random() * 1.0,
+            type: "Restaurant",
+            photoUrl: page.imageUrl,
+            city: cityName,
+            country: countryName,
+          });
+        }
+      }
+    }
+
+    if (allResults.length >= count) break;
+  }
+
+  return allResults.slice(0, count);
+};
+
+// Get tourist attractions for a city using Wikipedia
+const getActivitiesFromWikipedia = async (cityName, countryName, count = 6) => {
+  // Search for specific tourist attractions (not lists)
+  const attractionQueries = [
+    `tourist attraction ${cityName}`,
+    `landmark ${cityName}`,
+    `monument ${cityName}`,
+    `museum ${cityName}`,
+    `bridge ${cityName}`,
+    `park ${cityName}`,
+    `temple ${cityName}`,
+    `cathedral ${cityName}`,
+    `palace ${cityName}`,
+    `castle ${cityName}`,
+  ];
+
+  const allResults = [];
+
+  for (const query of attractionQueries) {
+    const titles = await searchWikipedia(query, 10);
+
+    for (const title of titles) {
+      // Skip list pages, categories, and generic pages
+      const titleLower = title.toLowerCase();
+      if (
+        titleLower.includes("list of") ||
+        titleLower.includes("category:") ||
+        titleLower.includes("tourist attractions in") ||
+        titleLower.includes("landmarks in") ||
+        titleLower.startsWith("category")
+      ) {
+        continue;
+      }
+
+      // Only include pages that look like actual attraction names
+      // Attraction names are usually specific places, not generic terms
+      if (
+        title.length < 60 &&
+        !titleLower.includes(" in ") &&
+        !titleLower.includes(" of ") &&
+        !allResults.find((a) => a.name === title)
+      ) {
+        const page = await getWikipediaPage(title);
+        if (page) {
+          allResults.push({
+            name: page.title,
+            rating: 4.0 + Math.random() * 1.0,
+            type: "Attraction",
+            photoUrl: page.imageUrl,
+          });
+        }
+      }
+
+      if (allResults.length >= count) break;
+    }
+
+    if (allResults.length >= count) break;
+  }
+
+  return allResults.slice(0, count);
 };
 
 // Generate image URL for places using Wikipedia API with multiple fallback strategies
@@ -330,9 +496,22 @@ const createCard = (type, data, heartData) => {
       }
     })();
   } else {
-    // Restaurants and activities: keep original grey background
+    // Restaurants and activities: add image if available, otherwise grey background
     div.className =
       "relative bg-neutral-300 rounded-2xl w-44 h-36 py-4 px-5 shrink-0 overflow-hidden";
+
+    // Add image if photoUrl exists
+    if (data.photoUrl) {
+      div.style.backgroundImage = `url("${data.photoUrl}")`;
+      div.style.backgroundSize = "cover";
+      div.style.backgroundPosition = "center";
+
+      // Add dark overlay for better text readability
+      const overlay = document.createElement("div");
+      overlay.className = "absolute inset-0 rounded-2xl bg-black/30";
+      overlay.style.pointerEvents = "none";
+      div.appendChild(overlay);
+    }
   }
 
   const heartButton = createHeartButton(`Save this ${type}`, type, heartData);
@@ -341,11 +520,23 @@ const createCard = (type, data, heartData) => {
 
   if (type !== "place") {
     const content = document.createElement("div");
-    content.className = "flex h-full flex-col justify-end gap-1";
-    content.innerHTML =
-      type === "restaurant"
-        ? `<p>${data.name}</p><p>${generateStars(data.rating)}</p>`
-        : `<p>${data.name}</p>`;
+    content.className = "flex h-full flex-col justify-end gap-1 relative z-10";
+
+    // Make text white if there's an image
+    if (data.photoUrl) {
+      content.style.color = "white";
+      content.style.textShadow = "0 1px 3px rgba(0,0,0,0.5)";
+    }
+
+    if (type === "restaurant") {
+      // Just show restaurant name and stars (no location, no description)
+      content.innerHTML = `<p class="font-medium">${
+        data.name
+      }</p><p>${generateStars(data.rating)}</p>`;
+    } else {
+      // Activities/Tourist attractions - just show the name
+      content.innerHTML = `<p class="font-medium">${data.name}</p>`;
+    }
     div.appendChild(content);
   }
 
@@ -482,8 +673,67 @@ const initializePage = async () => {
   ];
 
   const places = await fetchPlaces(6);
-  const restaurants = await fetchData("restaurants", restaurantsData, 6);
-  const activities = await fetchData("activities", activitiesData, 6);
+
+  // Get restaurants from multiple cities (use all cities from places)
+  let restaurants = [];
+  if (places.length > 0) {
+    const allRestaurants = [];
+    const restaurantsPerCity = Math.ceil(6 / places.length); // Distribute across cities
+
+    // Fetch restaurants from each city
+    for (const place of places) {
+      try {
+        const cityRestaurants = await getRestaurantsFromWikipedia(
+          place.cityName,
+          place.countryName,
+          restaurantsPerCity + 1 // Get a few extra in case some fail
+        );
+        allRestaurants.push(...cityRestaurants);
+      } catch (error) {
+        console.warn(
+          `Error fetching restaurants for ${place.cityName}:`,
+          error
+        );
+      }
+    }
+
+    // Randomize and take 6
+    restaurants = getRandomItems(allRestaurants, 6);
+  }
+
+  // Fallback to seed data if Wikipedia returns nothing
+  if (restaurants.length === 0) {
+    restaurants = await fetchData("restaurants", restaurantsData, 6);
+  }
+
+  // Get activities from multiple cities (use all cities from places)
+  let activities = [];
+  if (places.length > 0) {
+    const allActivities = [];
+    const activitiesPerCity = Math.ceil(6 / places.length); // Distribute across cities
+
+    // Fetch activities from each city
+    for (const place of places) {
+      try {
+        const cityActivities = await getActivitiesFromWikipedia(
+          place.cityName,
+          place.countryName,
+          activitiesPerCity + 1 // Get a few extra in case some fail
+        );
+        allActivities.push(...cityActivities);
+      } catch (error) {
+        console.warn(`Error fetching activities for ${place.cityName}:`, error);
+      }
+    }
+
+    // Randomize and take 6
+    activities = getRandomItems(allActivities, 6);
+  }
+
+  // Fallback to seed data if Wikipedia returns nothing
+  if (activities.length === 0) {
+    activities = await fetchData("activities", activitiesData, 6);
+  }
 
   const displayCards = (containerId, cards) => {
     const container = document.getElementById(containerId);
@@ -506,14 +756,15 @@ const initializePage = async () => {
   displayCards(
     "restaurants-container",
     restaurants.map((r) =>
-      createCard("restaurant", r, { name: r.name, rating: r.rating })
+      createCard("restaurant", r, {
+        name: r.name,
+        rating: r.rating,
+      })
     )
   );
   displayCards(
     "popular-container",
-    activities.map((a) =>
-      createCard("activity", a, { name: a.name, activityType: a.type || "" })
-    )
+    activities.map((a) => createCard("activity", a, { name: a.name }))
   );
 };
 
