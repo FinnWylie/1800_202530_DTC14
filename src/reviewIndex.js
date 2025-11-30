@@ -74,9 +74,12 @@ async function deleteSavedItem(item) {
     try {
         if (item.type === "review") {
             await deleteDoc(docRef(db, "reviews", item.id));
+            localStorage.removeItem(
+                "review_location",
+                item.type === "review" ? item.country : item.city || item.country
+            );
             return true;
         }
-        // if you later support deleting "place" from user doc, handle it here
         return false;
     } catch (err) {
         console.error("Failed to delete item:", err);
@@ -106,15 +109,26 @@ const createSavedItemCard = (item) => {
     deleteBtn.addEventListener("click", async () => {
         if (confirm("Are you sure you want to delete this review?")) {
             const success = await deleteSavedItem(item);
-            if (success) {
-                card.remove();
 
+            if (success) {
+
+                card.remove();
                 const container = document.getElementById("container");
                 if (container && container.children.length === 0) {
                     displayEmptyState();
                 }
             } else {
                 alert("Couldn't delete the review. Check console for errors.");
+                card.addEventListener("click", () => {
+                    // Update localStorage with this card's location
+                    localStorage.setItem(
+                        "review_location",
+                        item.type === "review" ? item.country : item.city || item.country
+                    );
+
+                    // Navigate to review page
+                    window.location.href = "../reviewPlace.html";
+                });
             }
         }
     });
@@ -151,16 +165,7 @@ const createSavedItemCard = (item) => {
     `;
     }
 
-    card.addEventListener("click", () => {
-        // Update localStorage with this card's location
-        localStorage.setItem(
-            "review_location",
-            item.type === "review" ? item.country : item.city || item.country
-        );
 
-        // Navigate to review page
-        window.location.href = "../reviewPlace.html";
-    });
     if (item.type === "place") {
         content.innerHTML = `
       <h1 class="font-bold">${escapeHtml(item.country || "Country")}</h1>
