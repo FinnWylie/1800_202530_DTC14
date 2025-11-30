@@ -1,3 +1,6 @@
+import {arrayRemove, arrayUnion, doc, updateDoc} from "firebase/firestore";
+import {auth, db} from "./firebaseConfig";
+import {onAuthStateChanged} from "firebase/auth";
 
 
 const notif = document.getElementById('userp');
@@ -10,6 +13,7 @@ const sup = document.getElementById('supp');
 const svgicon = document.getElementById('svgi');
 const spanu = document.getElementById('spanu');
 const sub = document.getElementById('sub');
+const delSearchHistory = document.getElementById('delSearchHistory');
 
 // Random Seperator 
 const e1 = document.getElementById("❌")
@@ -51,8 +55,9 @@ notif.addEventListener('click', () => {
     submenu.style.display = "block";
     submenus.style.display = "block";
     clm.style.display = "block";
-    sub.style.display = "block"
-    svgicon.style.display = "none"
+    sub.style.display = "block";
+    delSearchHistory.style.display = "block";
+    svgicon.style.display = "none";
     notif.classList.remove('nohover');
     // notif.style.backgroundColor = "white";
     padding.style.display = "block";
@@ -66,13 +71,41 @@ clm.addEventListener('click', (e) => {
     submenus.style.display = "none";
     notif.classList.add('nohover');
     clm.style.display = "none";
-    sub.style.display = "none"
+    sub.style.display = "none";
+    delSearchHistory.style.display = "none";
     svgicon.style.display = "block"
     padding.style.display = "none";
     // notif.style.backgroundColor = "#e6d8c3";;
 });
 
 
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        let user_var = user.uid
+        delSearchHistory.addEventListener('click', (event) => deleteHistory(user_var))
+
+        async function deleteHistory(user) {
+            if (confirm("Are you sure you want to delete your place history?")) {
+                const userRef = doc(db, "users", (user));
+                try {
+                    await updateDoc(userRef, {
+                            history: [],
+                        }
+                    );
+                    console.log(`history removed`);
+                } catch (error) {
+                    console.log("error removing history:", error)
+                }
+            }
+        }
+        console.log('user_var set')
+    }
+});
+
+
+
+// current page indicator
 function highlightCurrentPage() {
     console.log('highlighting page')
     let homeBtn = document.getElementById('homeSVG')
@@ -87,3 +120,4 @@ function highlightCurrentPage() {
     settingsSVG.setAttribute('stroke', '#61b07eff')
 }
 highlightCurrentPage()
+
