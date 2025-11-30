@@ -17,7 +17,7 @@ async function getHistoryPlaces(userId) {
         if (historyArray.length > 0) {
             const recentlyViewed = document.getElementById('recentlyViewed')
             recentlyViewed.innerHTML = `
-                <h1>Recently Viewed</h1>
+                <h1>Recently Searched</h1>
                     <div id="history" class="flex flex-col border-2 border-[#5d866c] rounded-xl bg-[#F5F3f1] text-lg max-h-min ">
                         <history-place id="history-place"></history-place>
                     </div>

@@ -388,6 +388,21 @@ searchInput.addEventListener('input', () => {
     }
 });
 
+
+function highlightCurrentPage() {
+    console.log('highlighting page')
+    let homeBtn = document.getElementById('homeSVG')
+    let searchSVG = document.getElementById('searchSVG')
+    let reviewSVG = document.getElementById('reviewSVG')
+    let savedSVG = document.getElementById('savedSVG')
+    let settingsSVG = document.getElementById('settingsSVG')
+    homeBtn.setAttribute('stroke', '#3a4f41ff')
+    searchSVG.setAttribute('stroke', '#61b07eff')
+    reviewSVG.setAttribute('stroke', '#3a4f41ff')
+    savedSVG.setAttribute('stroke', '#3a4f41ff')
+    settingsSVG.setAttribute('stroke', '#3a4f41ff')
+}
+highlightCurrentPage()
 // Hide suggestions when clicking outside
 document.addEventListener('click', function (event) {
     if (event.target !== searchInput) {

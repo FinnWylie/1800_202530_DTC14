@@ -192,6 +192,21 @@ const displaySavedItems = (items) => {
     });
 };
 
+function highlightCurrentPage() {
+    console.log('highlighting page')
+    let homeBtn = document.getElementById('homeSVG')
+    let searchSVG = document.getElementById('searchSVG')
+    let reviewSVG = document.getElementById('reviewSVG')
+    let savedSVG = document.getElementById('savedSVG')
+    let settingsSVG = document.getElementById('settingsSVG')
+    homeBtn.setAttribute('stroke', '#3a4f41ff')
+    searchSVG.setAttribute('stroke', '#3a4f41ff')
+    reviewSVG.setAttribute('stroke', '#61b07eff')
+    savedSVG.setAttribute('stroke', '#3a4f41ff')
+    settingsSVG.setAttribute('stroke', '#3a4f41ff')
+}
+highlightCurrentPage()
+
 // Small helper to avoid HTML injection in card text
 function escapeHtml(str) {
     if (!str) return "";
