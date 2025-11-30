@@ -165,6 +165,16 @@ const createSavedItemCard = (item) => {
     `;
     }
 
+    card.addEventListener("click", () => {
+        // Update localStorage with this card's location
+        localStorage.setItem(
+            "location_name",
+            item.type === "review" ? item.country : item.city || item.country
+        );
+
+        // Navigate to review page
+        window.location.href = "../eachPlace.html";
+    });
 
     if (item.type === "place") {
         content.innerHTML = `
@@ -196,6 +206,21 @@ const displaySavedItems = (items) => {
         container.appendChild(createSavedItemCard(item));
     });
 };
+
+function highlightCurrentPage() {
+    console.log('highlighting page')
+    let homeBtn = document.getElementById('homeSVG')
+    let searchSVG = document.getElementById('searchSVG')
+    let reviewSVG = document.getElementById('reviewSVG')
+    let savedSVG = document.getElementById('savedSVG')
+    let settingsSVG = document.getElementById('settingsSVG')
+    homeBtn.setAttribute('stroke', '#3a4f41ff')
+    searchSVG.setAttribute('stroke', '#3a4f41ff')
+    reviewSVG.setAttribute('stroke', '#61b07eff')
+    savedSVG.setAttribute('stroke', '#3a4f41ff')
+    settingsSVG.setAttribute('stroke', '#3a4f41ff')
+}
+highlightCurrentPage()
 
 // Small helper to avoid HTML injection in card text
 function escapeHtml(str) {

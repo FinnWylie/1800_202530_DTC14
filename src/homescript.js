@@ -766,7 +766,24 @@ const initializePage = async () => {
     "popular-container",
     activities.map((a) => createCard("activity", a, { name: a.name }))
   );
+
+
 };
+
+function highlightCurrentPage() {
+    console.log('highlighting page')
+    let homeBtn = document.getElementById('homeSVG')
+    let searchSVG = document.getElementById('searchSVG')
+    let reviewSVG = document.getElementById('reviewSVG')
+    let savedSVG = document.getElementById('savedSVG')
+    let settingsSVG = document.getElementById('settingsSVG')
+    homeBtn.setAttribute('stroke', '#61b07eff')
+    searchSVG.setAttribute('stroke', '#3a4f41ff')
+    reviewSVG.setAttribute('stroke', '#3a4f41ff')
+    savedSVG.setAttribute('stroke', '#3a4f41ff')
+    settingsSVG.setAttribute('stroke', '#3a4f41ff')
+}
+highlightCurrentPage()
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initializePage);
