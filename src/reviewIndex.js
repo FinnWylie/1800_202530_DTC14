@@ -83,16 +83,20 @@ async function deleteSavedItem(item) {
         return false;
     }
 }
+async function test() {
+    localStorage.getItem(["review_location"])
+    location.href = `../reviewPlace.html`
+}
 
 const createSavedItemCard = (item) => {
     const card = document.createElement("div");
-    card.className = "mb-6";
+    card.className = "mb-6 cursor-pointer";
 
     const inner = document.createElement("div");
     inner.className =
         "bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3 relative";
 
-    // DELETE BUTTON
+
     const deleteBtn = document.createElement("button");
     deleteBtn.className =
         "absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors text-lg font-bold z-10";
@@ -105,7 +109,7 @@ const createSavedItemCard = (item) => {
             if (success) {
                 card.remove();
 
-                const container = document.getElementById("container"); // use the actual container id
+                const container = document.getElementById("container");
                 if (container && container.children.length === 0) {
                     displayEmptyState();
                 }
@@ -114,6 +118,7 @@ const createSavedItemCard = (item) => {
             }
         }
     });
+
     inner.appendChild(deleteBtn);
 
     // IMAGE
@@ -134,11 +139,11 @@ const createSavedItemCard = (item) => {
     imageDiv.appendChild(img);
 
 
-    // CONTENT
+
     const content = document.createElement("div");
     content.className = "text-left leading-tight flex-1";
 
-    // REVIEW TYPE
+
     if (item.type === "review") {
         content.innerHTML = `
         <h1 class="font-bold text-lg mb-1"> ${escapeHtml(item.country || "Unknown Country")}</h1>
@@ -146,19 +151,29 @@ const createSavedItemCard = (item) => {
     `;
     }
 
-    // PLACE TYPE (if you still use it)
+    card.addEventListener("click", () => {
+        // Update localStorage with this card's location
+        localStorage.setItem(
+            "review_location",
+            item.type === "review" ? item.country : item.city || item.country
+        );
+
+        // Navigate to review page
+        window.location.href = "../reviewPlace.html";
+    });
     if (item.type === "place") {
         content.innerHTML = `
       <h1 class="font-bold">${escapeHtml(item.country || "Country")}</h1>
       <h1>${escapeHtml(item.city || "City")}</h1>
     `;
+
     }
 
     inner.appendChild(imageDiv);
     inner.appendChild(content);
     card.appendChild(inner);
-
     return card;
+
 };
 
 const displaySavedItems = (items) => {

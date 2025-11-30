@@ -1,9 +1,11 @@
-// Get elements
-const searchInput = document.getElementById('searchInput');
-const suggestions = document.getElementById('suggestions');
 import { db } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+
+const searchInput = document.getElementById('searchInput');
+const suggestions = document.getElementById('suggestions');
+const doneBtn = document.getElementById("donebtn");
+const inp = document.getElementById("inp");
 // Mock data
 const preDefinedSuggestions = [
     "Toronto, Canada",
@@ -354,100 +356,14 @@ async function fetchWikipediaImage(title) {
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
 
-    if (pageId === "-1") {
-        return null;
-    }
+    if (pageId === "-1") return null;
 
     const page = pages[pageId];
     return page.original?.source || null;
+
 }
 
-// Add event listener to input
-searchInput.addEventListener('input', () => {
-    const query = searchInput.value.toLowerCase();
-    suggestions.innerHTML = '';
-
-    if (query) {  // check for search in valid places
-        const filteredResults = preDefinedSuggestions.filter(item =>
-            item.toLowerCase().includes(query)
-        );
-
-
-        filteredResults.sort()  // make it alphabetical order
-
-        filteredResults.forEach(result => {  // add to html
-            const suggestionItem = document.createElement('div');
-            suggestionItem.classList.add('autocomplete-suggestion');
-            suggestionItem.classList.add('p-2.5');
-            suggestionItem.classList.add('cursor-pointer');
-            suggestionItem.classList.add('hover:bg-[#e6d8c3]');
-            suggestionItem.classList.add('border-t');
-            suggestionItem.classList.add('border-gray-400');
-            suggestionItem.classList.add('duration-100');
-            suggestionItem.textContent = result;
-            suggestionItem.addEventListener('click', () => {
-                let reviewLocation = result.slice(0, result.indexOf(","))  // ensure only the city name is passed
-                console.log(reviewLocation)
-
-
-
-                // add the place to the review selection
-                const chosenDiv = document.getElementById('chosen-place')
-                chosenDiv.innerHTML = `
-                    <h1>Location review is for</h1>
-                    <div class="flex flex-col border-2 border-[#5d866c] rounded-xl bg-[#F5F3f1] text-lg max-h-min ">
-                        <div id="chosen-place-inner" class="flex flex-row justify-between">
-                            <div class="chosenPlace flex flex-row autocomplete-suggestion p-2.5 rounded-xl text-[#254430] bg-[#F5F3F1] text-xl max-h-min h-[52px] font-semibold">
-                                <p class="chosenPlaceName my-auto pl-2 text-xl">${reviewLocation}</p>
-                            </div>
-                            <svg class="pr-2" id='closeBtn'
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="48"
-                              height="48"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="#000000"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path d="M18 6l-12 12" />
-                              <path d="M6 6l12 12" />
-                            </svg>
-
-                        </div>
-                    </div>`
-                localStorage["review_location"] = reviewLocation  // add the location to the browser's memory to use with firestore later
-
-                // add event listener to x button
-                // will remove the location from the div and memory
-                document.getElementById('closeBtn').addEventListener('click', () => {
-                    document.getElementById('chosen-place').innerHTML = ''
-                    localStorage["review_location"] = ''
-                })
-
-            });
-            suggestions.appendChild(suggestionItem);
-        });
-        document.getElementById("suggestions").lastElementChild.classList.add('rounded-b-lg');  // ensure the last one is rounded like the container
-    }
-});
-
-
-
-
-
-// Hide suggestions when clicking outside
-document.addEventListener('click', function (event) {
-    if (event.target !== searchInput) {
-        suggestions.innerHTML = '';
-    }
-});
-const doneBtn = document.getElementById("donebtn");
-const inp = document.getElementById("inp");
-const chosenPlace = document.getElementById("chosen-place");
-
-// UI: simple feedback message
+// Show message helper
 function showMessage(msg, isError = false) {
     let el = document.getElementById("add-review-msg");
     if (!el) {
@@ -460,9 +376,8 @@ function showMessage(msg, isError = false) {
     el.style.color = isError ? "crimson" : "green";
 }
 
+// Auth state
 let currentUser = null;
-
-// Wait for auth to be ready (you already used this pattern elsewhere)
 onAuthReady((user) => {
     currentUser = user;
     if (!user) {
@@ -473,7 +388,77 @@ onAuthReady((user) => {
     doneBtn.disabled = false;
 });
 
-// Basic validation + submit handler
+// Autocomplete input
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    suggestions.innerHTML = '';
+
+    if (query) {
+        const filteredResults = preDefinedSuggestions
+            .filter(item => item.toLowerCase().includes(query))
+            .sort();
+
+        filteredResults.forEach(result => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = "autocomplete-suggestion p-2.5 cursor-pointer hover:bg-[#e6d8c3] border-t border-gray-400 duration-100";
+            suggestionItem.textContent = result;
+
+            suggestionItem.addEventListener('click', () => {
+                const reviewLocation = result.split(",")[0].trim();
+                localStorage.setItem("review_location", reviewLocation);
+
+                const chosenDiv = document.getElementById('chosen-place');
+                chosenDiv.innerHTML = `
+                <h1>Location review is for</h1>
+                <div class="flex flex-col border-2 border-[#5d866c] rounded-xl bg-[#F5F3f1] text-lg max-h-min ">
+                    <div id="chosen-place-inner" class="flex flex-row justify-between">
+                        <div class="chosenPlace flex flex-row autocomplete-suggestion p-2.5 rounded-xl text-[#254430] bg-[#F5F3F1] text-xl max-h-min h-[52px] font-semibold">
+                            <p class="chosenPlaceName my-auto pl-2 text-xl">${reviewLocation}</p>
+                        </div>
+                        <svg class="pr-2" id='closeBtn'
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="48"
+                          height="48"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#000000"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="M18 6l-12 12" />
+                          <path d="M6 6l12 12" />
+                        </svg>
+                    </div>
+                </div>`;
+
+                // Close button removes location
+                document.getElementById('closeBtn').addEventListener('click', () => {
+                    document.getElementById('chosen-place').innerHTML = '';
+                    localStorage.removeItem("review_location");
+                });
+
+                suggestions.innerHTML = '';
+            });
+
+            suggestions.appendChild(suggestionItem);
+        });
+
+        if (suggestions.lastElementChild) {
+            suggestions.lastElementChild.classList.add('rounded-b-lg');
+        }
+    }
+
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', (event) => {
+    if (event.target !== searchInput) {
+        suggestions.innerHTML = '';
+    }
+});
+
+// Done button submission
 doneBtn.addEventListener("click", async (e) => {
     e.preventDefault();
 
@@ -483,24 +468,21 @@ doneBtn.addEventListener("click", async (e) => {
     }
 
     const text = (inp?.value || "").trim();
-    const place = localStorage.getItem(["review_location"])
+    const place = localStorage.getItem("review_location");
 
     if (!text) {
         showMessage("Please write a review before submitting.", true);
         return;
+    } else if (!place) {
+        showMessage("Please select a city.", true);
+        return;
     }
-    else if (!place) {
-        showMessage("Please select a city", true)
-        return
-    }
-
 
     let wikiImageUrl = "";
     try {
         wikiImageUrl = await fetchWikipediaImage(place);
     } catch (e) {
         console.warn("Wikipedia image fetch failed:", e);
-        wikiImageUrl = "";
     }
 
     const payload = {
@@ -508,22 +490,19 @@ doneBtn.addEventListener("click", async (e) => {
         imageUrl: wikiImageUrl || "",
         userId: currentUser.uid,
         createdAt: serverTimestamp(),
-        country: place || null
+        country: place
     };
 
     try {
-        const reviewsRef = collection(db, "reviews");
-        const docRef = await addDoc(reviewsRef, payload);
-
-        showMessage("Your review has been saved succesfully ✅");
-        setTimeout(function () { window.location.replace("review_index.html") }, 500)
+        await addDoc(collection(db, "reviews"), payload);
+        showMessage("Your review has been saved successfully ✅");
+        localStorage.removeItem("review_location");
         inp.value = "";
         searchInput.value = "";
-        // If you want to redirect back to reviews page:
-        // window.location.href = "/path/to/reviews.html";
-        console.log("Review created with ID:", docRef.id);
+        window.location.replace("review_index.html");
     } catch (err) {
         console.error("Error saving review:", err);
         showMessage("Error saving review. See console.", true);
     }
+
 });
