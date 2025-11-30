@@ -8,10 +8,10 @@ const PAGE_TITLE = localStorage["location_name"];  // Replace with any Wikipedia
 const data = {
     city: PAGE_TITLE,
     }
-
 let saved = false
 // ============================================
 async function loadWikipediaPage() {
+    console.log('loading wiki page')
     const loading = document.getElementById('loading');
     const error = document.getElementById('error');
     const content = document.getElementById('content');
@@ -104,7 +104,8 @@ const no_items = `<p class="text-lg leading-relaxed mb-4">There are no reviews f
 const review_container = document.getElementById("reviewText");
 
 // Load reviews for the signed-in user
-const loadSavedItems = async () => {
+const loadReviews = async () => {
+    console.log('trying to load reviews')
     if (!currentUser) return;
 
     try {
@@ -134,7 +135,7 @@ const loadSavedItems = async () => {
         })));
 
 
-        displaySavedItems(items, uNames);
+        displayReviews(items, uNames);
     } catch (error) {
         console.error("Error loading saved items:", error);
         review_container.innerHTML = no_items;
@@ -143,7 +144,7 @@ const loadSavedItems = async () => {
 };
 
 let currentUser = null;
-const displaySavedItems = (items, uNames) => {
+const displayReviews = (items, uNames) => {
     if (!review_container) return;
 
     review_container.innerHTML = "";
@@ -296,7 +297,7 @@ const deleteItem = async (data) => {
 onAuthReady((user) => {
     currentUser = user;
     if (user) {
-        loadSavedItems();
+        loadReviews();
     } else {
         // If you want guest users to be redirected:
         window.location.href = "loginSignup.html";
@@ -308,6 +309,10 @@ onAuthReady((user) => {
 onAuthStateChanged(auth, (user) => {
     if (user) {
         addHistoryPlace(user.uid, PAGE_TITLE);
+        console.log('called add place')
+        loadReviews();
+        console.log('called load saved')
         checkIfSaved(user.uid);
+        console.log('called check saved')
     }
 });
