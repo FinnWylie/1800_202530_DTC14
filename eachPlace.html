@@ -10,7 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Web Components for shared navbar and footer layout -->
-    <script type="module" src="/src/components/site-navbar.js"></script>
     <script type="module" src="/src/components/site-footer.js"></script>
 <!--    <script type="module" src="/src/history-place.js"></script>-->
 
@@ -54,8 +53,7 @@
 
         <!-- Content section -->
         <div>
-            <div id="placeText"
-                 class="bg-[#F5F3F1] text-[#254430] rounded-xl p-2 px-3 text-xl font-semibold border-2 border-[#5d866c]">
+            <div id="placeText" class="bg-[#F5F3F1] text-[#254430] rounded-xl p-2 px-3 text-xl font-semibold border-2 border-[#5d866c]">
                 <div id="error" class="hidden">
                     <p class="text-red-600 bg-red-50 p-4 rounded-xl"></p>
                 </div>
@@ -70,6 +68,18 @@
                         <a id="link" href="" target="_blank" class="text-[#5d866c] hover:underline font-bold">Read more
                             on
                             Wikipedia →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reviewDiv" class="bg-[#F5F3F1] text-[#254430] rounded-xl my-6 p-2 px-3 text-xl font-semibold border-2 border-[#5d866c]">
+            <div id="reviews" class="p-2">
+                <div class="">
+                    <p class="leading-relaxed pb-2 mb-2 -mt-2 text-3xl font-bold content-center text-[#37433b] border-b-gray-400 border-b-2">Reviews</p>
+
+                    <div id="reviewText">
+
                     </div>
                 </div>
             </div>
