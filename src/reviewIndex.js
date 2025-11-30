@@ -117,9 +117,7 @@ const createSavedItemCard = (item) => {
     deleteBtn.addEventListener("click", async () => {
         if (confirm("Are you sure you want to delete this review?")) {
             const success = await deleteSavedItem(item);
-            const idk = await test()
-            if (success && idk) {
-                testvar = false
+            if (success) {
                 card.remove();
                 const container = document.getElementById("container");
                 if (container && container.children.length === 0) {
@@ -150,7 +148,13 @@ const createSavedItemCard = (item) => {
     img.alt = "Review image";
 
     imageDiv.appendChild(img);
-
+    imageDiv.addEventListener('click', () => {
+        localStorage.setItem(
+            "review_location",
+            item.type === "review" ? item.country : item.city || item.country
+        );
+        window.location.href = "../eachPlace.html";
+    })
 
 
     const content = document.createElement("div");
@@ -163,17 +167,6 @@ const createSavedItemCard = (item) => {
         <p class="text-sm text-gray-700 whitespace-pre-line mt-1">${escapeHtml(item.text || "No text")}</p>
     `;
     }
-
-    card.addEventListener("click", () => {
-        // Update localStorage with this card's location
-        localStorage.setItem(
-            "location_name",
-            item.type === "review" ? item.country : item.city || item.country
-        );
-
-        // Navigate to review page
-        window.location.href = "../eachPlace.html";
-    });
 
     if (item.type === "place") {
         content.innerHTML = `
