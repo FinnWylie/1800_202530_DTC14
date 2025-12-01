@@ -1,10 +1,15 @@
-// src/saved_index.js
 // Saved items page - displays all saved items for the logged-in user
-// Includes delete functionality
+// Includes delete functionality, categories, click navigation, and images
 
 import { db } from "./firebaseConfig.js";
 import { onAuthReady } from "./authentication.js";
 import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import {
+  generateStars,
+  fetchWikipediaImage,
+  getWikipediaPage,
+} from "./cardUtils.js";
+import { getPlaceImageUrl } from "./places.js";
 
 let currentUser = null;
 
@@ -48,20 +53,14 @@ const loadSavedItems = async () => {
     }
 
     const userData = userDoc.data();
-    const items = [
-      ...(userData.savedCountries || []).map((item) => ({
-        ...item,
-        type: "place",
-      })),
-      ...(userData.savedRestaurants || []).map((item) => ({
-        ...item,
-        type: "restaurant",
-      })),
-      ...(userData.savedActivities || []).map((item) => ({
-        ...item,
-        type: "activity",
-      })),
+    const typeMap = [
+      { field: "savedCountries", type: "place" },
+      { field: "savedRestaurants", type: "restaurant" },
+      { field: "savedActivities", type: "activity" },
     ];
+    const items = typeMap.flatMap(({ field, type }) =>
+      (userData[field] || []).map((item) => ({ ...item, type }))
+    );
 
     // Sort by savedAt timestamp (most recent first)
     items.sort((a, b) => {
@@ -107,7 +106,7 @@ const deleteSavedItem = async (item) => {
   }
 };
 
-// Display saved items
+// Display saved items organized by categories
 const displaySavedItems = (items) => {
   const container = document.getElementById("bookmarked-container");
   if (!container) return;
@@ -119,9 +118,61 @@ const displaySavedItems = (items) => {
     return;
   }
 
-  items.forEach((item) => {
-    container.appendChild(createSavedItemCard(item));
+  // Display each category if it has items
+  const categories = [
+    {
+      type: "place",
+      title: "Cities",
+      items: items.filter((item) => item.type === "place"),
+    },
+    {
+      type: "restaurant",
+      title: "Restaurants",
+      items: items.filter((item) => item.type === "restaurant"),
+    },
+    {
+      type: "activity",
+      title: "Tourist Attractions",
+      items: items.filter((item) => item.type === "activity"),
+    },
+  ];
+
+  categories.forEach((category) => {
+    if (category.items.length > 0) {
+      container.appendChild(
+        createCategorySection(category.title, category.items)
+      );
+    }
   });
+};
+
+// Create a category section with title and cards (with simple dropdown)
+const createCategorySection = (categoryTitle, items) => {
+  const section = document.createElement("div");
+  section.className = "pt-12 px-4";
+
+  // Create category title (clickable for dropdown)
+  const titleContainer = document.createElement("div");
+  titleContainer.className =
+    "bg-[#F5F3F1] text-[#254430] rounded-xl p-2 h-[52px] px-3 text-xl font-semibold border-2 border-[#5d866c] mb-6 cursor-pointer";
+  titleContainer.innerHTML = `<h2>${categoryTitle}</h2>`;
+  section.appendChild(titleContainer);
+
+  const cardsContainer = document.createElement("div");
+  cardsContainer.className = "cards-container mt-6";
+  items.forEach((item) =>
+    cardsContainer.appendChild(createSavedItemCard(item))
+  );
+  section.appendChild(cardsContainer);
+
+  // Toggle dropdown on title click
+  let isExpanded = true;
+  titleContainer.addEventListener("click", () => {
+    isExpanded = !isExpanded;
+    cardsContainer.style.display = isExpanded ? "block" : "none";
+  });
+
+  return section;
 };
 
 // Create saved item card with delete button
@@ -131,25 +182,33 @@ const createSavedItemCard = (item) => {
 
   const inner = document.createElement("div");
   inner.className =
-    "bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3 relative";
+    "bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3 relative cursor-pointer";
+  // Ensure enough bottom padding so delete button area doesn't get cut off
+  inner.style.paddingBottom = "0.75rem";
 
-  // Delete button (X icon)
+  // Delete button
   const deleteBtn = document.createElement("button");
   deleteBtn.className =
     "absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors text-lg font-bold z-10";
   deleteBtn.innerHTML = "×";
   deleteBtn.setAttribute("aria-label", "Delete saved item");
   deleteBtn.style.lineHeight = "1";
-  deleteBtn.addEventListener("click", async () => {
+  deleteBtn.addEventListener("click", async (e) => {
+    e.stopPropagation();
     if (
       confirm("Are you sure you want to remove this item from your saved list?")
     ) {
-      const success = await deleteSavedItem(item);
-      if (success) {
-        card.remove();
-        // Check if list is now empty
-        const container = document.getElementById("bookmarked-container");
-        if (container && container.children.length === 0) {
+      if (await deleteSavedItem(item)) {
+        const cardsContainer = card.parentElement;
+        const section = cardsContainer?.parentElement;
+
+        if (cardsContainer.children.length === 1 && section) {
+          section.remove();
+        } else {
+          card.remove();
+        }
+
+        if (!document.getElementById("bookmarked-container")?.children.length) {
           displayEmptyState();
         }
       }
@@ -157,65 +216,94 @@ const createSavedItemCard = (item) => {
   });
   inner.appendChild(deleteBtn);
 
-  // Image
+  // Image container
   const imageDiv = document.createElement("div");
   imageDiv.className =
-    "bg-white w-36 h-24 flex items-center justify-center overflow-hidden rounded";
-  if (item.imageUrl) {
-    const img = document.createElement("img");
-    img.src = item.imageUrl;
-    img.alt = item.name || `${item.country} ${item.city}`;
-    img.className = "w-full h-full object-cover";
-    imageDiv.appendChild(img);
-  } else {
-    imageDiv.innerHTML = '<p class="text-gray-400">Image</p>';
-  }
+    "bg-neutral-300 w-36 h-24 flex items-center justify-center overflow-hidden rounded";
+
+  // Load image asynchronously (use saved image or fetch from Wikipedia)
+  (async () => {
+    let imageUrl = item.imageUrl?.trim();
+
+    // If no image URL, try to fetch from Wikipedia
+    if (!imageUrl) {
+      if (item.type === "place") {
+        // For places, use the same function as home page (tries multiple queries)
+        imageUrl = await getPlaceImageUrl(item.city, item.country);
+      } else if (item.type === "restaurant" || item.type === "activity") {
+        // For restaurants and activities, get page data
+        const page = await getWikipediaPage(item.name);
+        imageUrl = page?.imageUrl || null;
+      }
+    }
+
+    // Apply image if found
+    if (imageUrl) {
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = item.name || `${item.country} ${item.city}`;
+      img.className = "w-full h-full object-cover";
+      imageDiv.appendChild(img);
+    } else {
+      // Keep the grey background if no image found
+      imageDiv.innerHTML = '<p class="text-gray-400 text-sm">Image</p>';
+    }
+  })();
 
   // Content
   const content = document.createElement("div");
   content.className = "text-left leading-tight flex-1";
 
-  if (item.type === "place") {
-    content.innerHTML = `<h1 class="font-bold">${
-      item.country || "Country"
-    }</h1><h1>${item.city || "City"}</h1>`;
-  } else if (item.type === "restaurant") {
-    const rating = item.rating ? generateStars(item.rating) : "";
-    content.innerHTML = `<h1 class="font-bold">${
-      item.name || "Restaurant"
-    }</h1>${rating ? `<p>${rating}</p>` : ""}`;
-  } else if (item.type === "activity") {
-    content.innerHTML = `<h1 class="font-bold">${item.name || "Activity"}</h1>${
+  const contentMap = {
+    place: `<h1 class="font-bold">${item.country || "Country"}</h1><h1>${
+      item.city || "City"
+    }</h1>`,
+    restaurant: `<h1 class="font-bold">${item.name || "Restaurant"}</h1>${
+      item.rating ? `<p>${generateStars(item.rating)}</p>` : ""
+    }`,
+    activity: `<h1 class="font-bold">${item.name || "Activity"}</h1>${
       item.activityType
         ? `<p class="text-gray-600 text-sm">${item.activityType}</p>`
         : ""
-    }`;
-  }
+    }`,
+  };
+  content.innerHTML = contentMap[item.type] || "";
 
   inner.appendChild(imageDiv);
   inner.appendChild(content);
+
+  // Make card clickable - redirect to detail page
+  inner.addEventListener("click", (e) => {
+    if (e.target.closest("button")) return;
+
+    const pageMap = {
+      place: {
+        key: "location_name",
+        value: item.city || "",
+        page: "eachPlace.html",
+      },
+      restaurant: {
+        key: "restaurant_name",
+        value: item.name || "",
+        page: "eachRestaurant.html",
+      },
+      activity: {
+        key: "activity_name",
+        value: item.name || "",
+        page: "eachActivity.html",
+      },
+    };
+
+    const nav = pageMap[item.type];
+    if (nav) {
+      localStorage.setItem(nav.key, nav.value);
+      window.location.href = nav.page;
+    }
+  });
+
   card.appendChild(inner);
 
   return card;
-};
-
-// Generate stars
-const generateStars = (rating) => {
-  // Round to nearest whole number and clamp between 0 and 5
-  const roundedRating = Math.min(5, Math.max(0, Math.round(rating)));
-  const emptyStars = 5 - roundedRating;
-
-  // Yellow stars for the rating
-  const yellowStars = "★".repeat(roundedRating);
-
-  // White stars for the remainder
-  const whiteStars = "★".repeat(emptyStars);
-
-  // Return HTML with proper styling
-  if (emptyStars > 0) {
-    return `<span class="text-yellow-600">${yellowStars}</span><span class="text-white">${whiteStars}</span>`;
-  }
-  return `<span class="text-yellow-600">${yellowStars}</span>`;
 };
 
 // Display empty state
@@ -232,16 +320,16 @@ const displayEmptyState = () => {
 };
 
 function highlightCurrentPage() {
-    console.log('highlighting page')
-    let homeBtn = document.getElementById('homeSVG')
-    let searchSVG = document.getElementById('searchSVG')
-    let reviewSVG = document.getElementById('reviewSVG')
-    let savedSVG = document.getElementById('savedSVG')
-    let settingsSVG = document.getElementById('settingsSVG')
-    homeBtn.setAttribute('stroke', '#3a4f41ff')
-    searchSVG.setAttribute('stroke', '#3a4f41ff')
-    reviewSVG.setAttribute('stroke', '#3a4f41ff')
-    savedSVG.setAttribute('stroke', '#61b07eff')
-    settingsSVG.setAttribute('stroke', '#3a4f41ff')
+  console.log("highlighting page");
+  let homeBtn = document.getElementById("homeSVG");
+  let searchSVG = document.getElementById("searchSVG");
+  let reviewSVG = document.getElementById("reviewSVG");
+  let savedSVG = document.getElementById("savedSVG");
+  let settingsSVG = document.getElementById("settingsSVG");
+  homeBtn.setAttribute("stroke", "#3a4f41ff");
+  searchSVG.setAttribute("stroke", "#3a4f41ff");
+  reviewSVG.setAttribute("stroke", "#3a4f41ff");
+  savedSVG.setAttribute("stroke", "#61b07eff");
+  settingsSVG.setAttribute("stroke", "#3a4f41ff");
 }
-highlightCurrentPage()
+highlightCurrentPage();
