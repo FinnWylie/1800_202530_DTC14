@@ -3,9 +3,15 @@
 import { auth, db } from "./firebaseConfig.js";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { saveItem, deleteItem, isItemSaved } from "./cardUtils.js";
 
 // Get restaurant name from localStorage (set when clicking a restaurant card)
 const RESTAURANT_NAME = localStorage["restaurant_name"];
+
+const data = {
+  name: RESTAURANT_NAME,
+};
+let saved = false;
 
 // ============================================
 // LOAD WIKIPEDIA PAGE - Fetch restaurant info from Wikipedia
@@ -96,9 +102,58 @@ if (document.readyState === "loading") {
   loadWikipediaPage();
 }
 
-// Save to history when user is logged in
+// ============================================
+// HEART FUNCTIONALITY - Save/unsave restaurant
+// ============================================
+
+const checkIfSaved = async () => {
+  const heartBtn = document.getElementById("heartBtn");
+
+  if (heartBtn) {
+    heartBtn.addEventListener("click", toggleSaved);
+    const isSaved = await isItemSaved("restaurant", data);
+    saved = isSaved;
+    updateHeartState();
+  }
+};
+
+const updateHeartState = () => {
+  let heartBtn = document.getElementById("heartBtn");
+  if (!heartBtn) return;
+
+  const path = heartBtn.querySelector("path");
+  if (!path) return;
+
+  heartBtn.setAttribute("aria-pressed", saved);
+  if (saved) {
+    path.setAttribute("fill", "#FF2D55");
+    path.setAttribute("stroke", "#FF2D55");
+  } else {
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "#000000");
+  }
+};
+
+const toggleSaved = async () => {
+  if (saved) {
+    const success = await deleteItem("restaurant", data);
+    if (success) {
+      saved = false;
+      updateHeartState();
+    }
+  } else {
+    const success = await saveItem("restaurant", data);
+    if (success) {
+      saved = true;
+      updateHeartState();
+    }
+  }
+};
+
+// Save to history and check if saved when user is logged in
 onAuthStateChanged(auth, (user) => {
   if (user) {
     addHistoryRestaurant(user.uid, RESTAURANT_NAME);
+    checkIfSaved();
   }
 });

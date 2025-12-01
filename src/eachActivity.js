@@ -3,9 +3,15 @@
 import { auth, db } from "./firebaseConfig.js";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { saveItem, deleteItem, isItemSaved } from "./cardUtils.js";
 
 // Get activity name from localStorage (set when clicking an activity card)
 const ACTIVITY_NAME = localStorage["activity_name"];
+
+const data = {
+  name: ACTIVITY_NAME,
+};
+let saved = false;
 
 // ============================================
 // LOAD WIKIPEDIA PAGE - Fetch activity info from Wikipedia
@@ -96,9 +102,58 @@ if (document.readyState === "loading") {
   loadWikipediaPage();
 }
 
-// Save to history when user is logged in
+// ============================================
+// favorite the page
+// ============================================
+
+const checkIfSaved = async () => {
+  const heartBtn = document.getElementById("heartBtn");
+
+  if (heartBtn) {
+    heartBtn.addEventListener("click", toggleSaved);
+    const isSaved = await isItemSaved("activity", data);
+    saved = isSaved;
+    updateHeartState();
+  }
+};
+
+const updateHeartState = () => {
+  let heartBtn = document.getElementById("heartBtn");
+  if (!heartBtn) return;
+
+  const path = heartBtn.querySelector("path");
+  if (!path) return;
+
+  heartBtn.setAttribute("aria-pressed", saved);
+  if (saved) {
+    path.setAttribute("fill", "#FF2D55");
+    path.setAttribute("stroke", "#FF2D55");
+  } else {
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "#000000");
+  }
+};
+
+const toggleSaved = async () => {
+  if (saved) {
+    const success = await deleteItem("activity", data);
+    if (success) {
+      saved = false;
+      updateHeartState();
+    }
+  } else {
+    const success = await saveItem("activity", data);
+    if (success) {
+      saved = true;
+      updateHeartState();
+    }
+  }
+};
+
+// Save to history and check if saved when user is logged in
 onAuthStateChanged(auth, (user) => {
   if (user) {
     addHistoryActivity(user.uid, ACTIVITY_NAME);
+    checkIfSaved();
   }
 });
