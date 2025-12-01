@@ -1,14 +1,13 @@
-// src/places.js
 // Handles place cards: fetching places and creating place cards
 
 import { db } from "./firebaseConfig.js";
 import { collection, getDocs } from "firebase/firestore";
-import { 
-  getRandomItems, 
-  formatName, 
-  createHeartButton, 
+import {
+  getRandomItems,
+  formatName,
+  createHeartButton,
   fetchWikipediaImage,
-  displayCards 
+  displayCards,
 } from "./cardUtils.js";
 
 // ============================================
@@ -71,7 +70,7 @@ export const fetchPlaces = async (count = 6) => {
   ];
 
   const allPlaces = [];
-  
+
   // Get cities from each country
   for (const countryId of knownCountries) {
     try {
@@ -110,7 +109,7 @@ export const getPlaceImageUrl = async (cityName, countryName) => {
     `Flag of ${countryName}`,
     `${countryName} flag`,
   ];
-  
+
   // Try each query until we find an image
   for (const query of queries) {
     const url = await fetchWikipediaImage(query);
@@ -195,7 +194,7 @@ export const createPlaceCard = (placeData) => {
 // Fetch places and display them on the page
 // Optionally accepts places array to avoid fetching twice
 export const initializePlaces = async (places = null) => {
-  const placesToUse = places || await fetchPlaces(6);
+  const placesToUse = places || (await fetchPlaces(6));
   const placeCards = placesToUse.map((place) => createPlaceCard(place));
   displayCards("places-container", placeCards);
   return placesToUse; // Return places so we can reuse them
