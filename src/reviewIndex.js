@@ -101,11 +101,11 @@ async function test() {
 
 const createSavedItemCard = (item) => {
     const card = document.createElement("div");
-    card.className = "mb-6 cursor-pointer";
+    card.className = "review-card mb-6 cursor-pointer";
 
     const inner = document.createElement("div");
     inner.className =
-        "bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3 relative";
+        "review-card-inner bg-neutral-300 rounded-2xl font-medium flex items-center gap-4 px-4 py-3 relative";
 
 
     const deleteBtn = document.createElement("button");
@@ -150,7 +150,7 @@ const createSavedItemCard = (item) => {
     imageDiv.appendChild(img);
     imageDiv.addEventListener('click', () => {
         localStorage.setItem(
-            "review_location",
+            "location_name",
             item.type === "review" ? item.country : item.city || item.country
         );
         window.location.href = "../eachPlace.html";
