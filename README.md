@@ -10,18 +10,14 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 
 ## Features
 
-<<<<<<< HEAD
 - Navigation for navbar
 - Search any city on the search bar which provides page regarding the city
 - Clickable cards on home page which redirects user to page about their card.
 - Lets user make a review about the city.
 - User saved cards can be viewd on the saved page.
 - Dropdown functionality for the category on the saved page.
-=======
 - Ability to save your trip destinations
 - Search function
-- add more
->>>>>>> 7723ecba162fc9975916f1aeda12d70747f70a5d
 
 ---
 
@@ -66,11 +62,7 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 
 ## Contributors
 
-<<<<<<< HEAD
-- **Rathnesh** - Fun fact: Loves to code, and game
-=======
 - **Rathnesh** -  Fun fact: Loves to code, and game
->>>>>>> 7723ecba162fc9975916f1aeda12d70747f70a5d
 - **Kevin Wu** - BCIT CST Student who loves any kind of sports.
 - **Finn** - BCIT CST Student with a passion for the outdoors and video editing.
 
@@ -80,7 +72,6 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 
 - Code snippets were adapted from resources such as [Stack Overflow](https://stackoverflow.com/) and [MDN Web Docs](https://developer.mozilla.org/).
 - Icons sourced from [Tablericons](https://tablericons.com/), font sourced from [Google Fonts](https://fonts.google.com/)
-- If needed add more.
 
 ---
 
@@ -88,7 +79,6 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 
 ### Limitations
 
-<<<<<<< HEAD
 - Profile editing
 - No reviews for restaurant and tourist attraction cards.
 
@@ -98,15 +88,8 @@ Developed for the COMP 1800 course, this project applies User-Centred Design pra
 - Add reveiws for restaurants and tourist attraction cards.
 - Might change how cards retrieve data.
 - Add accesibility such as dark mode.
-=======
 - Limited settings (dark/light mode, editing usename, etc).
 - Accessibility features can be further expanded upon.
-
-### Future Work
-
-- Implement more accessibility options.
-- Create a dark mode for better usability in low-light conditions.
->>>>>>> 7723ecba162fc9975916f1aeda12d70747f70a5d
 
 ---
 
